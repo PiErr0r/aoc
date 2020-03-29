@@ -13,21 +13,22 @@ def main(*args):
 	program_text = """
 import math, copy
 
-with open('{0}_input') as f:
-	data = f.read()
-	data = data.split()
-	data = list(map(int, data.split()))
 
-def part_1():
+def part_1(data):
 	return
 
-def part_2():
+def part_2(data):
 	return 
 
 
 if __name__ == '__main__':
-	part_1()
-	#part_2()
+	with open('{0}_input') as f:
+		data = f.read()
+		data = data.split()
+		data = list(map(int, data.split()))
+
+	part_1(data)
+	#part_2(data)
 	""".format(day)
 
 
