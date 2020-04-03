@@ -15,7 +15,6 @@ specify that a specific-valued microchip should be given to a specific bot;
 the rest of the instructions indicate what a given bot should do with its lower-value 
 or higher-value chip.
 For example, consider the following instructions:
-
 value 5 goes to bot 2
 bot 2 gives low to bot 1 and high to bot 0
 value 3 goes to bot 1

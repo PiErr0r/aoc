@@ -28,8 +28,8 @@ if __name__ == '__main__':
 		data = list(map(int, data.split()))
 
 
-	part_1(data)
-	#part_2(data)
+	part_1(copy.deepcopy(data))
+	part_2(copy.deepcopy(data))
 	""".format(day)
 
 
