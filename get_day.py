@@ -3,14 +3,14 @@
 import re, sys, requests
 from bs4 import BeautifulSoup
 
-USE_ARG = """get_day expects two arguments: a year and a month 
+USE_ARG = """get_day expects two arguments: a year and a day 
 eg. ./get_day 2017 6
 """
-USE_TYPE = """both year and month must be numbers (integers)
+USE_TYPE = """both year and day must be numbers (integers)
 """
 USE_YEAR_LOW = "cannot fetch year before 2015"
 USE_YEAR_HIGH = "cannot fetch year after 2019"
-USE_MONTH = "invalid month"
+USE_MONTH = "day must be in interval [1,25]"
 
 
 def main(*args):
@@ -86,16 +86,15 @@ if __name__ == '__main__':
 		print(USE_ARG)
 	else:
 		try:
-			[year, month] = list(map(int, sys.argv[1:]))
+			[year, day] = list(map(int, sys.argv[1:]))
 			if year < 2015:
 				print(USE_YEAR_LOW)
 			elif year > 2019:
 				print(USE_YEAR_HIGH)
 			else:
-				if month < 1 or month > 12:
-					print(USE_MONTH)
+				if day < 1 or day > 25:
+					print(USE_DAY)
 				else:
-					print("HERE WE GO")
 					main(*sys.argv[1:])
 
 			
