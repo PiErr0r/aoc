@@ -3,6 +3,16 @@
 import re, sys, requests
 from bs4 import BeautifulSoup
 
+USE_ARG = """get_day expects two arguments: a year and a month 
+eg. ./get_day 2017 6
+"""
+USE_TYPE = """both year and month must be numbers (integers)
+"""
+USE_YEAR_LOW = "cannot fetch year before 2015"
+USE_YEAR_HIGH = "cannot fetch year after 2019"
+USE_MONTH = "invalid month"
+
+
 def main(*args):
 	[year, day] = args
 	session = '53616c7465645f5fdcafb5ae2a8b435a4d926486c4046c5e6cd2b3c46abc3bf59a12a78003cb8271a465f8cc9fb54d33'
@@ -72,4 +82,24 @@ if __name__ == '__main__':
 
 if __name__ == '__main__':
 	
-	main(*sys.argv[1:])
+	if len(sys.argv[1:]) != 2:
+		print(USE_ARG)
+	else:
+		try:
+			[year, month] = list(map(int, sys.argv[1:]))
+			if year < 2015:
+				print(USE_YEAR_LOW)
+			elif year > 2019:
+				print(USE_YEAR_HIGH)
+			else:
+				if month < 1 or month > 12:
+					print(USE_MONTH)
+				else:
+					print("HERE WE GO")
+					main(*sys.argv[1:])
+
+			
+		except:
+			print(USE_ARG)
+			print(USE_TYPE)
+
