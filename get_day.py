@@ -25,9 +25,12 @@ import math, copy, re
 
 
 def part_1(data):
+
+	print('END OF PART1')
 	return
 
 def part_2(data):
+	print('END OF PART2')
 	return 
 
 
