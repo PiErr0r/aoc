@@ -15,7 +15,11 @@ USE_MONTH = "day must be in interval [1,25]"
 
 def main(*args):
 	[year, day] = args
-	session = '53616c7465645f5fdcafb5ae2a8b435a4d926486c4046c5e6cd2b3c46abc3bf59a12a78003cb8271a465f8cc9fb54d33'
+	with open('session', 'r') as f:
+		session = f.read()
+	
+	if len(session) == 0:
+		return
 	url = f'https://adventofcode.com/{year}/day/{day}'
 	url_input = url + '/input'
 	cookies = dict(session=session)
