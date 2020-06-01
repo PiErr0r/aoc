@@ -1,6 +1,6 @@
 --- Day 13: A Maze of Twisty Little Cubicles ---
 
-Youarrive at the first floor of this new building to discover a much less 
+You arrive at the first floor of this new building to discover a much less 
 welcoming environment than the shiny atrium of the last one.  Instead, you 
 are in a maze of twisty little cubicles, all alike.
 Every location in this 
@@ -68,3 +68,11 @@ You can also [Shareon
   Twitter
 Mastodon] 
 this puzzle. 
+
+
+--- Part Two ---
+
+How many locations (distinct x,y coordinates, including your starting 
+	location) can you reach in at most 50 steps?
+
+Your puzzle input is still 1352.
