@@ -25,7 +25,7 @@ def main(*args):
 	cookies = dict(session=session)
 
 	program_text = """
-import math, copy, re
+import math, copy, re, hashlib
 
 
 def part_1(data):
