@@ -1,20 +1,28 @@
 #!/usr/bin/env python3
 
+import os
 import re, sys, requests
 from bs4 import BeautifulSoup
+from datetime import datetime
+
+NOW = datetime.now()
 
 USE_ARG = """get_day expects two arguments: a year and a day 
 eg. ./get_day 2017 6
 """
-USE_TYPE = """both year and day must be numbers (integers)
+USE_TYPE = """Both year and day must be numbers (integers)
 """
-USE_YEAR_LOW = "cannot fetch year before 2015"
-USE_YEAR_HIGH = "cannot fetch year after 2019"
-USE_MONTH = "day must be in interval [1,25]"
+USE_YEAR_LOW = "Cannot fetch year before 2015"
+USE_YEAR_HIGH = f"Cannot fetch year after {NOW.year}"
+USE_MONTH = "Day must be in interval [1,25]!"
+USE_NOT_STARTED = "current year Advent of Code hasn't started yet!"
 
 
 def main(*args):
 	[year, day] = args
+	if len(str(day)) == 1:
+		day = '0' + day
+
 	with open('session', 'r') as f:
 		session = f.read()
 	
@@ -58,6 +66,13 @@ if __name__ == '__main__':
 	r_main = re.sub(r'window.*', '', str(r_content.find('main')))
 	r_main = re.sub(r'<\s*[A-Za-z\/]+[^<>]*>|window.*$', '', r_main).strip()
 
+	curr_dir = os.getcwd()
+	try:
+		os.chdir(str(year))
+		os.chdir('../')
+	except:
+		os.mkdir(f"{curr_dir}/{year}")
+
 	with open(f'./{year}/{day}_input', 'w') as f:
 		if ord(r_input.text[-1]) == 10:
 			f.write(r_input.text[:-1])
@@ -96,16 +111,20 @@ if __name__ == '__main__':
 			[year, day] = list(map(int, sys.argv[1:]))
 			if year < 2015:
 				print(USE_YEAR_LOW)
-			elif year > 2019:
+			elif year > NOW.year:
 				print(USE_YEAR_HIGH)
 			else:
-				if day < 1 or day > 25:
-					print(USE_DAY)
+				if year == NOW.year and NOW.month != 12:
+					print(USE_NOT_STARTED)
 				else:
-					main(*sys.argv[1:])
+					if day < 1 or day > 25:
+						print(USE_DAY)
+					else:
+						main(*sys.argv[1:])
 
 			
-		except:
+		except Exception as ex:
 			print(USE_ARG)
 			print(USE_TYPE)
+			print(ex)
 
