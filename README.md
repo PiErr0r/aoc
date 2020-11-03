@@ -16,6 +16,18 @@
 * just run it with python3.7+ and it will tell you what you need to know to use it
 * all of the dependencies (imports) should be built-in but as I am not sure run the script and you will probably get some errors
 
+#### Result
+
+* The script creates a folder with the name of year fetched (if the foder doesn't currently exist)
+* in the folder it will create 3 files (where {day} represents the day fetched):
+  1. `{day}.py`
+    * here is initial code with useful imports and separated functions for both parts of the challenge
+    * it is also already setup to split the input by lines or something else (depending on the input itself)
+  2. `{day}_day`
+    * here is the text (task) of the day fetched
+  3. `{day}_input`
+    * which holds the input data for you
+
 ## solved
 
 ### 2015
