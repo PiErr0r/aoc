@@ -20,8 +20,6 @@ USE_NOT_STARTED = "current year Advent of Code hasn't started yet!"
 
 def main(*args):
 	[year, day] = args
-	if len(str(day)) == 1:
-		day = '0' + day
 
 	with open('session', 'r') as f:
 		session = f.read()
@@ -31,6 +29,8 @@ def main(*args):
 	url = f'https://adventofcode.com/{year}/day/{day}'
 	url_input = url + '/input'
 	cookies = dict(session=session)
+	if len(str(day)) == 1:
+		day = '0' + day
 
 	program_text = """
 import math, copy, re, hashlib

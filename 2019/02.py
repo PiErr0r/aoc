@@ -1,0 +1,77 @@
+
+import math, copy, re, hashlib
+
+GOAL = 19690720
+
+def mul(arr, pos):
+	global ans
+	f = arr[arr[pos + 1]]
+	s = arr[arr[pos + 2]]
+	r = f * s
+	arr[arr[pos + 3]] = r
+	return pos + 4, arr
+
+def add(arr, pos):
+	global ans
+	f = arr[arr[pos + 1]]
+	s = arr[arr[pos + 2]]
+	r = f + s
+	arr[arr[pos + 3]] = r
+	return pos + 4, arr
+
+def halt(arr, pos):
+	return -1, arr
+
+func = {
+	2: mul,
+	1: add,
+	99:halt
+}
+
+def part_1(data):
+
+	i = 0
+	while i != -1:
+		(i, data) = func[data[i]](data, i)
+		# print(data)
+
+	print(data[0])
+
+	print('END OF PART1')
+	return
+
+def part_2(data):
+	ans = None
+	# print(data[1:3])
+	for j in range(100):
+		if ans is not None:
+			break
+
+		for k in range(100):
+			data[1] = j
+			data[2] = k
+			
+			i = 0
+			d = copy.deepcopy(data)
+			while i != -1:
+				(i, d) = func[d[i]](d, i)
+			if d[0] == GOAL:
+				ans = [j,k]
+				break
+
+	print(ans if ans is None else 100 * ans[0] + ans[1])
+
+	print('END OF PART2')
+	return 
+
+
+if __name__ == '__main__':
+	with open('02_input') as f:
+		data = f.read()
+		# data = data.split('\n')
+		data = list(map(int, data.split(',')))
+
+
+	part_1(copy.deepcopy(data))
+	part_2(copy.deepcopy(data))
+	
