@@ -1,5 +1,6 @@
 
 import math, copy, re, hashlib
+from intcode import IntCode
 
 GOAL = 19690720
 
@@ -29,13 +30,8 @@ func = {
 }
 
 def part_1(data):
-
-	i = 0
-	while i != -1:
-		(i, data) = func[data[i]](data, i)
-		# print(data)
-
-	print(data[0])
+	a = IntCode(data)
+	print(a.data)
 
 	print('END OF PART1')
 	return
@@ -53,9 +49,8 @@ def part_2(data):
 			
 			i = 0
 			d = copy.deepcopy(data)
-			while i != -1:
-				(i, d) = func[d[i]](d, i)
-			if d[0] == GOAL:
+			d = IntCode(d)
+			if d.data[0] == GOAL:
 				ans = [j,k]
 				break
 
