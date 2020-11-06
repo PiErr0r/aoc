@@ -27,6 +27,7 @@
         * here is the text (task) of the day fetched
     3. `{day}_input`
         * which holds the input data for you
+* in addition the script will create a file with the exact time when it has fetched the day so you can track you time when solving
 
 ## solved
 

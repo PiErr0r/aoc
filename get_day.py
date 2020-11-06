@@ -100,6 +100,10 @@ if __name__ == '__main__':
 	with open(f'./{year}/{day}.py', 'w') as f:
 		f.write(program_text)
 
+	with open("fetch_day_time", 'w') as f:
+		exact = datetime.now()
+		f.write(f"{exact.hour:02d}:{exact.minute:02d}:{exact.second:02d}")
+
 	return 
 
 if __name__ == '__main__':
