@@ -4,34 +4,9 @@ from intcode import IntCode
 
 GOAL = 19690720
 
-def mul(arr, pos):
-	global ans
-	f = arr[arr[pos + 1]]
-	s = arr[arr[pos + 2]]
-	r = f * s
-	arr[arr[pos + 3]] = r
-	return pos + 4, arr
-
-def add(arr, pos):
-	global ans
-	f = arr[arr[pos + 1]]
-	s = arr[arr[pos + 2]]
-	r = f + s
-	arr[arr[pos + 3]] = r
-	return pos + 4, arr
-
-def halt(arr, pos):
-	return -1, arr
-
-func = {
-	2: mul,
-	1: add,
-	99:halt
-}
-
 def part_1(data):
 	a = IntCode(data)
-	print(a.data)
+	print(a.data[0])
 
 	print('END OF PART1')
 	return

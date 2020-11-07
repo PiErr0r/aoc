@@ -5,36 +5,42 @@ class IntCode(object):
 		self.data = data
 		self.pos = 0
 		self.func = {
-			1: self.add,
-			2: self.mul,
-			99: self.halt
+			"01": lambda x: self.add(*self.get_mode(x)),
+			"02": lambda x: self.mul(*self.get_mode(x)),
+			"99": lambda x: self.halt()
 		}
 
 		while self.pos != -1:
-			self.func[ self.data[ self.pos ] ]()
+			param = self.data[ self.pos ]
+			opcode = f"{param%100:02d}"
+			self.func[ opcode ](param)
 
-	def mul(self, address = True):
-		f_pos = self.data[ self.pos + 1 ] if address else self.pos + 1
-		s_pos = self.data[ self.pos + 2 ] if address else self.pos + 2
-		r_pos = self.data[ self.pos + 3 ] if address else self.pos + 3
+	def get_mode(self, n):
+		ns = f"{n:05d}"
+		return map(lambda x: x == "0", reversed(str(ns)[:3]))
+
+	def mul(self, f_addr = True, s_addr = True, res_addr = True):
+		f_pos = self.data[ self.pos + 1 ] if f_addr else self.pos + 1
+		s_pos = self.data[ self.pos + 2 ] if s_addr else self.pos + 2
+		res_pos = self.data[ self.pos + 3 ] if res_addr else self.pos + 3
 
 		f = self.data[ f_pos ]
 		s = self.data[ s_pos ]
-		r = f * s
+		res = f * s
 
-		self.data[r_pos] = r
+		self.data[res_pos] = res
 		self.pos += 4
 
-	def add(self, address = True):
-		f_pos = self.data[ self.pos + 1 ] if address else self.pos + 1
-		s_pos = self.data[ self.pos + 2 ] if address else self.pos + 2
-		r_pos = self.data[ self.pos + 3 ] if address else self.pos + 3
+	def add(self, f_addr = True, s_addr = True, res_addr = True):
+		f_pos = self.data[ self.pos + 1 ] if f_addr else self.pos + 1
+		s_pos = self.data[ self.pos + 2 ] if s_addr else self.pos + 2
+		res_pos = self.data[ self.pos + 3 ] if res_addr else self.pos + 3
 
 		f = self.data[ f_pos ]
 		s = self.data[ s_pos ]
-		r = f + s
+		res = f + s
 
-		self.data[r_pos] = r
+		self.data[res_pos] = res
 		self.pos += 4
 
 	def halt(self):
