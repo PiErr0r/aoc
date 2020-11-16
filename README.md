@@ -1,11 +1,11 @@
 # Advent of Code
 
-## How to use the script
+## How to use the `get_day.py` script
 
 #### Session file
 
 1. Create a file named `session`
-2. Log In on Advent of Code website
+2. Log In on [Advent of Code](https://adventofcode.com/) website
 3. Open console (`Ctrl+Shift+i` or simply `F12`)
 4. Go to `Storage` tab on Firefox or `Application` tab on Chrome based browser
 5. In the sidebar find `Cookies` and locate the one that has your session stored
@@ -27,7 +27,7 @@
         * here is the text (task) of the day fetched
     3. `{day}_input`
         * which holds the input data for you
-* in addition the script will create a file with the exact time when it has fetched the day so you can track you time when solving
+* in addition the script will create a file with the exact time when it has fetched the day so you can track your time when solving
 
 ## solved
 
