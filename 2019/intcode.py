@@ -27,7 +27,7 @@ class IntCode(object):
 
 		self.input_data = input_data
 		self.out_param = None
-		self.in_pos = 0
+		self.pause = False
 
 		self.func = {
 			"01": lambda x: self.add(*self.get_mode(x, ret_n = 3)),
@@ -41,11 +41,18 @@ class IntCode(object):
 			"99": lambda x: self.halt()
 		}
 
-		while self.pos != -1:
+	def is_halted(self):
+		return self.pos == -1
+
+	def unpause(self, input_data):
+		self.input_data += input_data
+		self.pause = False
+
+	def calculate(self):
+		while self.pos != -1 and not self.pause:
 			param = self.data[ self.pos ]
 			opcode = f"{param%100:02d}"
 			self.func[ opcode ](param)
-
 
 	def get_mode(self, n, *, ret_n):
 		"""
@@ -99,12 +106,14 @@ class IntCode(object):
 
 
 	def input(self):
-		in_pos = self.data[ self.pos + 1 ]
-		in_val = self.input_data[ self.in_pos ]
-		self.data[ in_pos ] = in_val
-		self.in_pos += 1
-		self.pos += 2
-
+		if len(self.input_data):
+			in_pos = self.data[ self.pos + 1 ]
+			in_val = self.input_data.pop(0)
+			self.data[ in_pos ] = in_val
+			self.pos += 2
+		else:
+			print("PAUSED")
+			self.pause = True
 
 	def output(self, p_addr = True):
 		out_pos = self.data[ self.pos + 1 ] if p_addr else self.pos + 1
@@ -112,6 +121,8 @@ class IntCode(object):
 		print("DIAGNOSTIC:", self.out_param)
 		self.pos += 2
 
+	def get_output(self):
+		return self.out_param
 
 	def mul(self, f_addr = True, s_addr = True, res_addr = True):
 		f_pos = self.data[ self.pos + 1 ] if f_addr else self.pos + 1

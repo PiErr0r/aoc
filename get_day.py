@@ -34,6 +34,7 @@ def main(*args):
 
 	program_text = """
 import math, copy, re, hashlib
+import itertools as it
 
 
 def part_1(data):
