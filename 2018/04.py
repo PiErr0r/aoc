@@ -26,45 +26,98 @@ def get_minutes(i, guards):
 	i += 1
 	res = 0
 	t1 = 0
+	intervals = []
 	while i < len(guards) and guards[i][1][0] != 'G':
 		ts, act = guards[i]
 		if act[0] == 'f':
 			t1 = ts % 100
 		elif act[0] == 'w':
 			res += (ts % 100) - t1 
+			r = (ts % 100) - t1 
+			intervals.append((t1, t1 + r))
 		i += 1
-	# print("HERE1",i, guards[i])
-	return (i, res)
+	return (i, res, intervals)
 
 def get_id(guard):
 	_, action = guard
 	r = "#\d+"
-	# print(action)
 	return re.findall(r, action)[0][1:]
 
 def part_1(data):
 
 	guards = sort_data(data)
 	i = 0
-	maxi = 0
-	g_id = None
 	gs = dict()
 
 	while i < len(guards):
-		# print(i)
-		i_next, minutes = get_minutes(i, guards)
-		# print(i)
-		if minutes > maxi:
-			maxi = minutes
-			# print(">>",i, guards[i])
-			g_id = get_id(guards[i])
+		i_next, minutes, ints = get_minutes(i, guards)
+		gid = get_id(guards[i])
+		try:
+			gs[gid]
+			gs[gid]['mins'].append(minutes)
+			gs[gid]['ints'] += ints
+		except:
+			gs[gid] = dict(mins=[minutes], ints=ints)
+
 		i = i_next
-		
-	print(maxi * int(g_id))
+
+	maxi = 0
+	maxi_id = None
+	for i in gs.keys():
+		if (s:=sum(gs[i]['mins'])) > maxi:
+			maxi = s
+			maxi_id = i
+
+	all_min = [0] * 60
+	for i in gs[maxi_id]['ints']:
+		s, e = i
+		for j in range(s, e):
+			all_min[j] += 1
+
+	maxi = all_min.index(m:=max(all_min))
+	print(maxi * int(maxi_id))
 	print('END OF PART1')
 	return
 
 def part_2(data):
+
+	guards = sort_data(data)
+	i = 0
+	gs = dict()
+
+	while i < len(guards):
+		i_next, minutes, ints = get_minutes(i, guards)
+		gid = get_id(guards[i])
+		try:
+			gs[gid]
+			gs[gid]['mins'].append(minutes)
+			gs[gid]['ints'] += ints
+		except:
+			gs[gid] = dict(mins=[minutes], ints=ints)
+
+		i = i_next
+
+	gs_mins = dict()
+	for i in gs.keys():
+		all_min = [0] * 60
+		for interval in gs[i]['ints']:
+			s, e = interval
+			for j in range(s, e):
+				all_min[j] += 1
+		gs_mins[i] = all_min[::]
+
+
+	maxi = 0
+	maxi_min = None
+	m_id = None
+	for i in gs_mins.keys():
+		cmax = max(gs_mins[i])
+		if cmax > maxi:
+			maxi = cmax
+			maxi_min = gs_mins[i].index(maxi)
+			m_id = int(i)
+
+	print(m_id * maxi_min)
 	print('END OF PART2')
 	return 
 
