@@ -4,5 +4,5 @@ def disp(grid):
     print()
 
 
-if __name__ == "__main__":
-	disp([])
+def rl(arr):
+	return range(len(arr))
