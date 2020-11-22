@@ -54,7 +54,6 @@ def part_1(data):
 			if row[x] == '.':
 				continue
 			v = get_visible(data, (x, y))
-			# print(v, (x, y))
 			if v > maxi:
 				maxi = v
 				coords = (x, y)
@@ -88,8 +87,6 @@ def disp(data):
 
 def vaporize(data, coords):
 	x, y = coords
-	# xs = [[i for i in range(1, MAXI)], [i for i in range(MAXI - 1, 0, -1)], [i for i in range(-1, -MAXI, -1)], [i for i in range(-MAXI + 1, 0)]]
-	# ys = [[i for i in range(-MAXI + 1, 0)], [i for i in range(1, MAXI)], [i for i in range(MAXI - 1, 0, -1)], [i for i in range(-1, -MAXI, -1)]]
 
 	xs = [list(range((MAXI * 2))), list(range(1, (MAXI * 2))), list(range(-(MAXI * 2) + 1, 1)), list(range(-(MAXI * 2) + 1, 0))]
 	ys = [list(range(-(MAXI * 2) + 1, 0)), list(range((MAXI * 2))), list(range(1, (MAXI * 2))), list(range(-(MAXI * 2) + 1, 1))]
@@ -99,10 +96,9 @@ def vaporize(data, coords):
 	vap_cnt = 0
 	res_coords = (0,0)
 	for px, py in zip(xs, ys):
-		ret = vap(data, nils[cnt % 4], coords)
 		combs = [(i, j) for i in px for j in py]
-		dirs = sorted(list(combs), key=lambda p: math.atan2(p[1], p[0]))
-		print(len(dirs))
+		# the if clause is here because when y == 0 and x < 0 atan2 returns pi but in this case we need -pi for the consistency 
+		dirs = sorted(list(combs), key=lambda p: -math.atan2(p[1], p[0]) if p[1] == 0 and p[0] < 0 else math.atan2(p[1], p[0]))
 		for d in dirs:
 			i, j = d
 			if not rel_prime(i, j): continue
@@ -139,5 +135,5 @@ if __name__ == '__main__':
 
 	MAXI = len(data)
 	part_1(copy.deepcopy(data))
-	# part_2(copy.deepcopy(data))
+
 	
