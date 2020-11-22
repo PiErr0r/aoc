@@ -22,15 +22,15 @@ class IntCode(object):
 			2 - relative
 			
 	"""
-	def __init__(self, data, input_data):
+	def __init__(self, data, input_data = None):
 		super(IntCode, self).__init__()
 
 		self.data = data
 		self.pos = 0
 		self.rel_pos = 0
 
-		self.input_data = input_data
-		self.out_param = None
+		self.input_data = input_data if input_data is not None else []
+		self.out_param = []
 		self.pause = False
 
 		# registers for data outside of the scope of the program length
@@ -50,22 +50,20 @@ class IntCode(object):
 		}
 
 	def is_halted(self):
-		"""
-		Check if the program is halted
-		"""
+		"""Check if the program is halted"""
 		return self.pos == -1
 
+	def is_paused(self):
+		"""Check if program is paused"""
+		return self.pause 
+
 	def unpause(self, input_data = []):
-		"""
-		If the process is paused you can start it again and add more input data as a list
-		"""
+		"""If the process is paused you can start it again and add more input data as a list"""
 		self.input_data += input_data
 		self.pause = False
 
 	def calculate(self):
-		"""
-		Start the execution of the program
-		"""
+		"""Start the execution of the program"""
 		while self.pos != -1 and not self.pause:
 			param = self.data[ self.pos ]
 			opcode = f"{param%100:02d}"
@@ -97,9 +95,7 @@ class IntCode(object):
 		return address
 
 	def set_data(self, addr, value):
-		"""
-		Set the addr of data or registers to the value passed
-		"""
+		"""Set the addr of data or registers to the value passed"""
 		if addr < 0:
 			print("FAIL - negative address")
 		if addr >= len(self.data):
@@ -108,9 +104,7 @@ class IntCode(object):
 			self.data[ addr ] = value
 
 	def get_data(self, addr):
-		"""
-		Get value from data or registers based on address
-		"""
+		"""Get value from data or registers based on address"""
 		ret_val = None
 		if addr < 0:
 			print("FAIL - negative address")
@@ -184,12 +178,12 @@ class IntCode(object):
 
 	def output(self, p_addr = 0):
 		out_pos = self.get_address(p_addr, 1)
-		self.out_param = self.get_data(out_pos)
-		print("DIAGNOSTIC:", self.out_param)
+		self.out_param += [self.get_data(out_pos)]
+		print("DIAGNOSTIC:", self.out_param[-1])
 		self.pos += 2
 
-	def get_output(self):
-		return self.out_param
+	def get_output(self, last = 1):
+		return self.out_param[-last:]
 
 	def mul(self, f_addr = 0, s_addr = 0, res_addr = 0):
 		f_pos = self.get_address(f_addr,1)
