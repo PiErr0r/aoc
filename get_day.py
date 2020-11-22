@@ -81,6 +81,7 @@ if __name__ == '__main__':
 			f.write(r_input.text)
 
 	with open(f'./{year}/{day}_day', 'w') as f:
+		r_main = r_main.replace('&gt;', '>').replace('&lt;', '<').replace('&amp;', '&')
 		r_main = r_main.split(' ')
 		k = 0
 		for (i, txt) in enumerate(r_main):
