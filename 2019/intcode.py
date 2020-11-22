@@ -22,7 +22,7 @@ class IntCode(object):
 			2 - relative
 			
 	"""
-	def __init__(self, data, input_data = None):
+	def __init__(self, data, input_data = None, debug = False):
 		super(IntCode, self).__init__()
 
 		self.data = data
@@ -32,6 +32,7 @@ class IntCode(object):
 		self.input_data = input_data if input_data is not None else []
 		self.out_param = []
 		self.pause = False
+		self.debug = debug
 
 		# registers for data outside of the scope of the program length
 		self.regs = dict()
@@ -179,10 +180,15 @@ class IntCode(object):
 	def output(self, p_addr = 0):
 		out_pos = self.get_address(p_addr, 1)
 		self.out_param += [self.get_data(out_pos)]
-		print("DIAGNOSTIC:", self.out_param[-1])
+		if self.debug:
+			print("DIAGNOSTIC:", self.out_param[-1])
 		self.pos += 2
 
 	def get_output(self, last = 1):
+		if last == -1:
+			tmp = self.out_param[::]
+			self.out_param = []
+			return tmp
 		return self.out_param[-last:]
 
 	def mul(self, f_addr = 0, s_addr = 0, res_addr = 0):
