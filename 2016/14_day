@@ -58,14 +58,13 @@ You can also [Shareon
 Twitter
 Mastodon] this puzzle. 
 
+--- Part Two ---
+
 Of course, in order to make this process even more secure, you've also implemented key stretching.
 
-Key stretching forces attackers to spend more time generating hashes. 
-Unfortunately, it forces everyone else to spend more time, too.
+Key stretching forces attackers to spend more time generating hashes. Unfortunately, it forces everyone else to spend more time, too.
 
-To implement key stretching, whenever you generate a hash, before you use it, 
-you first find the MD5 hash of that hash, then the MD5 hash of that hash, 
-and so on, a total of 2016 additional hashings. Always use lowercase hexadecimal representations of hashes.
+To implement key stretching, whenever you generate a hash, before you use it, you first find the MD5 hash of that hash, then the MD5 hash of that hash, and so on, a total of 2016 additional hashings. Always use lowercase hexadecimal representations of hashes.
 
 For example, to find the stretched hash for index 0 and salt abc:
 
@@ -84,5 +83,3 @@ The rest of the process remains the same, but now the keys are entirely differen
     Eventually, index 22551 produces the 64th key (triple fff with matching fffff at index 22859.
 
 Given the actual salt in your puzzle input and using 2016 extra MD5 calls of key stretching, what index now produces your 64th one-time pad key?
-
-Your puzzle input is still ihaygndm.
