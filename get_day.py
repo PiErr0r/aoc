@@ -36,6 +36,8 @@ def main(*args):
 import math, copy, re, hashlib
 import itertools as it
 
+def rl(arr):
+	return range(len(arr))
 
 def part_1(data):
 
