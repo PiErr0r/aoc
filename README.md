@@ -37,7 +37,7 @@
 #### Running the script
 This script should be used *during* the day you want to solve the problem because the `aoc_main.sh` runs `get_day.py` with current year and day and then opens everything it fetched in Sublime Text
 
-1. **Try to execute [previous script](#session-file) to see if everything works**
+1. **Try to execute [previous script](#how-to-use-the-scripts) to see if everything works**
 2. Run the script and results will be the same as running `get_day.py` but in addition Sublime Text opens files which were fetched 
 
 ## Solved
