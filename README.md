@@ -1,7 +1,7 @@
 # Advent of Code
 
-## How to use the `get_day.py` script
-
+## How to use the scripts
+### `get_day.py`
 #### Session file
 
 1. Create a file named `session`
@@ -29,7 +29,18 @@
         * which holds the input data for you
 * in addition the script will create a file with the exact time when it has fetched the day so you can track your time when solving
 
-## solved
+### `aoc_main.sh`
+#### Requirements
+1. Linux machine or wsl
+2. Sublime Text editor which could be open from said machine
+
+#### Running the script
+This script should be used *during* the day you want to solve the problem because the `aoc_main.sh` runs `get_day.py` with current year and day and then opens everything it fetched in Sublime Text
+
+1. **Try to execute [previous script](#session-file) to see if everything works**
+2. Run the script and results will be the same as running `get_day.py` but in addition Sublime Text opens files which were fetched 
+
+## Solved
 
 ### 2015
 [1, 21] U {23}
@@ -46,4 +57,5 @@
 ### 2019
 [1, 12 & 13 (part 1 on both)]
 
-test
+### 2020
+[1, 2]
