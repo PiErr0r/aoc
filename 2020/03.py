@@ -20,8 +20,8 @@ def part_1(data):
 def part_2(data):
 	cnt, ans = 1, 1
 	sl = [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
-	for s in rl(sl):
-		dx, dy = sl[s]
+	for s in sl:
+		dx, dy = s
 		i, j, cnt = 0, 0, 0
 		while i < len(data):
 			if data[i][j % len(data[0])] == '#':
