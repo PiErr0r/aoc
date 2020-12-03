@@ -58,4 +58,4 @@ This script should be used *during* the day you want to solve the problem becaus
 [1, 12 & 13 (part 1 on both)]
 
 ### 2020
-[1, 2]
+[1, 3]
