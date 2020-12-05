@@ -22,20 +22,27 @@ def get_r_c(data):
 def part_1(data):
 
 	max_id = 0
-	ids = set()
+	min_id = math.inf
+	id_sum = 0
 	for i in data:
 		r, c = get_r_c(i)
 		curr_id = r * 8 + c
-		ids |= {curr_id}
+		id_sum += curr_id
 		if  curr_id > max_id:
 			max_id = curr_id
+		if curr_id < min_id:
+			min_id = curr_id
 	print(max_id)
 	print('END OF PART1')
-	part_2(max_id, ids)
+	part_2(max_id, min_id, id_sum)
 	return
 
-def part_2(max_id, ids):
-	print(max(set(list(range(max_id))) - ids))
+def ss(n):
+	return n * (n + 1) // 2
+
+def part_2(max_id, min_id, id_sum):
+
+	print(ss(max_id) - ss(min_id - 1) - id_sum)
 	print('END OF PART2')
 	return 
 
