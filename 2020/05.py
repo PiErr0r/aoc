@@ -7,26 +7,13 @@ from lib import check_data, parse_row, has_all_fields
 def rl(arr):
 	return range(len(arr))
 
-def get_r_c(data):
-	r_data = data[:7]
-	lr = len(r_data)
-	c_data = data[7:]
-	lc = len(c_data)
-	r, c = 0 , 0
-	for i in range(lr):
-		r += (0 if r_data[i] == 'F' else (1 << (lr - i - 1)))
-	for i in range(lc):
-		c += (0 if c_data[i] == 'L' else (1 << (lc - i - 1)))
-	return r, c
-
 def part_1(data):
 
 	max_id = 0
 	min_id = math.inf
 	id_sum = 0
 	for i in data:
-		r, c = get_r_c(i)
-		curr_id = r * 8 + c
+		curr_id = int(i.replace("F", "0").replace("B", "1").replace("L", "0").replace("R","1"), 2)
 		id_sum += curr_id
 		if  curr_id > max_id:
 			max_id = curr_id
