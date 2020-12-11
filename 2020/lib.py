@@ -92,3 +92,11 @@ def has_all_fields(data):
 	except:
 		return False
 	return True
+
+
+def disp(grid):
+  for row in grid:
+      print("".join(row))
+  print()
+
+    
