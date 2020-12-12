@@ -62,6 +62,20 @@ def rot_wp(wp, k, v):
 def mov_me(p, wp, v):
 	return [p[0] + v * wp[0], p[1] + v * wp[1] ]
 
+# I had to copy this beauty of the code fro 4chan aoc board
+# such fucking elegance, gj Anon
+def part_2xx(data):
+	ops = [(x[0], int(x[1:])) for x in data.split("\n")]
+	pos, wpos = 0, 10 + 1j
+	cdirs = {"N":1j, "S": -1j, "E":1, "W":-1}	
+	dirs = {"L":1j, "R":-1j}
+	for op, l in ops:
+		wpos += cdirs.get(op, 0) * l
+		wpos *= dirs.get(op, 1) ** (l / 90)
+		if op == "F":
+			pos += wpos * l
+	print(int( abs(pos.real) + abs(pos.imag) ))
+
 def part_2(data):
 	pos = [0, 0]
 	wp = [10, -1]
@@ -82,10 +96,11 @@ def part_2(data):
 if __name__ == '__main__':
 	with open('12_input') as f:
 		data = f.read()
+		in_data = data
 		data = data.split('\n')
 		# data = list(map(int, data.split()))
 
 
 	part_1(copy.deepcopy(data))
 	part_2(copy.deepcopy(data))
-	
+	part_2xx(in_data)
