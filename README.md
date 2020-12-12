@@ -55,7 +55,7 @@ This script should be used *during* the day you want to solve the problem becaus
 [1, 8] U {10}
 
 ### 2019
-[1, 12 & 13 (part 1 on both)]
+[1, 13 (part 1)]
 
 ### 2020
 [1, 12]

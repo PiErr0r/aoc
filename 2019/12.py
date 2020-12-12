@@ -1,6 +1,16 @@
 from lib import rl
 import math, copy, re, hashlib
 import itertools as it
+from functools import reduce
+
+"""
+TBH i needed some guidance with this problem
+The help was that you can observe the axes separately 
+	instead of focusing on the whole system
+The eonly problem is that we expect for the zeroeth
+	to be repeated, but what if the system repeats some	
+	point in time instead of the zeroeth?
+"""
 
 STEPS = 1000
 
@@ -120,35 +130,37 @@ def part_1(data):
 def part_2(data):
 
 	data = parse(data)
-	init_pos = [[], [], [], []]
-	steps = [None] * 4
-	cnt = 0
-	# while None in steps:
-	while True:
-		for i in rl(data):
-			# if steps[i] is not None: continue
-			init_pos[i].append(data[i]['pos'][::])
+	prev = {
+		0: {},
+		1: {},
+		2: {}
+	}
+
+	i = 0
+	found = [0, 0, 0]
+
+	for axis in range(3):
+		pos = []
+		for moon in data:
+			pos += [moon['pos'][axis]]
+		prev[axis] = tuple(pos)
+	found = [None, None, None]
+	i = 1
+	while None in found:
 		data = get_vel(data)
 		data = get_pos(data)
-		# print(cnt, data)
-		cnt += 1
-		for i in rl(data):
-			if steps[i] is not None and steps[i][2] > 50: continue
-			try:
-				ind = init_pos[i].index(data[i]['pos'])
-				steps[i] = [ind, cnt, 1] if steps[i] is None else [ind, cnt, steps[i][2] + 1]
-			except:
-				pass
-		print(cnt, steps)
-	s = [p[0] for p in steps]
-	ds = [p[1] for p in steps]
+		for axis in range(3):
+			pos = []
+			for moon in data:
+				pos += [moon['pos'][axis]]
+			if tuple(pos) == prev[axis] and found[axis] is None: 
+				found[axis] = i + 1
+		i += 1
 
+	res = reduce(lambda x, y: lcm(x, y), found, 1)
+	print(res)
+	# while None in found:
 
-	print(steps)
-	# l = steps[0]
-	# for s in steps[1:]:
-	# 	l = lcm(l, s[1])
-	# print(l)
 
 	print('END OF PART2')
 	return 
