@@ -1,3 +1,39 @@
+"""
+    space = dict()
+
+    for y, f in enumerate(enumerate(l.rstrip()) for l in open(0)):
+        for x, c in f:
+            space[(x, y, 0, 0)] = c == '#'
+
+    def neighbours(p):
+        for dx in range(-1, 2):
+            for dy in range(-1, 2):
+                for dz in range(-1, 2):
+                    for dw in range(-1, 2):
+                        if dx == 0 and dy == 0 and dz == 0 and dw == 0:
+                            continue
+                        yield (p[0] + dx, p[1] + dy, p[2] + dz, p[3] + dw)
+
+    def occ(p):
+        o = 0
+        for p in neighbours(p):
+            if space.get(p, False):
+                o += 1
+        return o
+
+    for cycle in range(6):
+        occupied = dict()
+        for p in {p for cell in space.keys() for p in neighbours(cell)}:
+            occupied[p] = occ(p)
+        for p, o in occupied.items():
+            if space.get(p, False) and not (o == 2 or o == 3):
+                space[p] = False
+            elif not space.get(p, False) and o == 3:
+                space[p] = True
+        print(cycle)
+    print(sum(space.values()))
+"""
+
 
 import math, copy, re, hashlib
 import itertools as it
@@ -69,24 +105,6 @@ def do_cycle(g):
 				# print(ng[i][j][k], g[i][j][k])
 	return ng
 
-def do_cycle4(g):
-	ng = copy.deepcopy(g)
-	for i in rl(g):
-		if i == 0 or i == len(g) - 1:
-			continue
-		for j in rl(g[0]):
-			if j == 0 or j == len(g[0]) - 1:
-				continue
-			for k in rl(g[0][0]):
-				if k == 0 or k == len(g[0][0]) - 1:
-					continue
-				for l in rl(g[0][0][0]):
-					if l == 0 or l == len(g[0][0][0]) - 1:
-						continue
-					ng[i][j][k][l] = get_pos4(g, (i, j, k, l))
-				# print(ng[i][j][k], g[i][j][k])
-	return ng
-
 def part_1(data):
 	data = [list(i) for i in data]
 	grid = []
@@ -113,33 +131,22 @@ def part_1(data):
 	print('END OF PART1')
 	return
 
+def do_cycles4(cells):
+	nc = {}
+	for k in cells.keys():
+		nc(k)
+
 def part_2(data):
 	data = [list(i) for i in data]
-	grid = []
-	hg = []
-	for h in range(6):
-		for i in range(13):
-			plane = []
-			for j in range(40):
-				if i == 6 and 20 <= j < 20 + len(data):
-					row = ['.' for _ in range(20)] + data[j - 20][::] + ['.' for i in range(40 - 20 - len(data))]
-				else:
-					row = ['.' for _ in range(40)]
-				plane.append(row[::])
-			grid.append(plane[::])
-		hg.append(grid)
+	cells = {}
+	for i in rl(data):
+		for j in rl(data[0]):
+			cells[(j, i, 0, 0)] = data[i][j] == '#'
 
-	for cycle in range(6):
-		print(cycle)
-		hg = do_cycle4(hg)
+	for _ in range(6):
+		cells = do_cycle4(cells)
 
-	cnt = 0
-	for grid in hg:
-		for plane in grid:
-			for row in plane:
-				for item in row:
-					if item == '#':
-						cnt += 1
+	
 	print(cnt)
 	print('END OF PART2')
 	return 
