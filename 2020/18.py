@@ -66,14 +66,14 @@ def parse(exp):
 			ret.append(l[::])
 			i += j
 		elif exp[i] == ')':
-			if len(curr_num.strip()):
+			if len(curr_num):
 				ret.append(int(curr_num))
 			return ret[::], i + 1
 		elif exp[i] in ['+', '*']:
+			if len(curr_num):
+				ret.append(int(curr_num))
+				curr_num = ""
 			ret.append(exp[i])
-		elif exp[i] == ' ' and len(curr_num.strip()):
-			ret.append(int(curr_num))
-			curr_num = ""
 		else:
 			curr_num += exp[i]
 			if i == len(exp) - 1:
@@ -81,42 +81,20 @@ def parse(exp):
 		i += 1
 	return ret[::], i
 
-def solve_sum(e):
+def solve_op(e, op):
 	i = 0
 	while i < len(e):
-		if e[i] == '+':
-			op1 = e[i-1]
-			op2 = e[i+1]
-			if type(op1) is list:
-				op1 = solve(op1)
-			if type(op2) is list:
-				op2 = solve(op2)
-			e = e[:i-1] + [op1 + op2] + e[i+2:]
-			i = 0
-			continue
+		if e[i] == op:
+			op1, op2 = e[i-1] if type(e[i-1]) is int else solve(e[i-1]) , e[i+1] if type(e[i+1]) is int else solve(e[i+1])
+			res = op1 + op2 if op == '+' else op1 * op2
+			e = e[:i-1] + [res] + e[i+2:]
+			i -= 2
 		i += 1
 	return e
 
-def solve_mul(e):
-	i = 0
-	while i < len(e):
-		if e[i] == '*':
-			op1 = e[i-1]
-			op2 = e[i+1]
-			if type(op1) is list:
-				op1 = solve(op1)
-			if type(op2) is list:
-				op2 = solve(op2)
-			e = e[:i-1] + [op1 * op2] + e[i+2:]
-			i = 0
-			continue
-		i += 1
-	return e	
-
 def solve(e):
-	while len(e) > 1:
-		e = solve_sum(e)
-		e = solve_mul(e)
+	e = solve_op(e, '+')
+	e = solve_op(e, '*')
 	return e[0]
 
 def calc2(exp):
@@ -127,7 +105,7 @@ def part_2(data):
 	ans = 0
 	cnt = 0
 	for exp in data:
-		val = calc2(exp)
+		val = calc2(exp.replace(" ", ""))
 		ans += val
 	print(ans)
 	print('END OF PART2')
