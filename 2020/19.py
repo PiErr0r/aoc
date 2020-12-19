@@ -7,11 +7,6 @@ from lib import check_data, parse_row, has_all_fields
 def rl(arr):
 	return range(len(arr))
 
-def get_msgs(data):
-	for i in data:
-		msg = i
-		yield msg
-
 def get_rules(data, change_rules = False):
 	# 8: 42 | 42 8
 	# 11: 42 31 | 42 11 31
@@ -98,7 +93,7 @@ def get_cnt(msgs, n31, n42, cond1, cond2):
 def solve(data):
 
 	rules = get_rules(data[0].split('\n'))
-	msgs = get_msgs(data[1].split('\n'))
+	msgs = data[1].split('\n')
 
 	n31 = get_r_for(rules, 31)
 	n42 = get_r_for(rules, 42)
