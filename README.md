@@ -43,19 +43,19 @@ This script should be used *during* the day you want to solve the problem becaus
 ## Solved
 
 ### 2015
-[1, 21] U {23}
+[1, 23] \ {22}
 
 ### 2016
-[1, 10] U [12, 22.5] U [23, 24]
+[1, 24] \ {11, 22 part(2)}
 
 ### 2017
-[1, 20 (part 1)] U [22, 23]
+[1, 23] \ {20 (part2), 21}
 
 ### 2018
-[1, 8] U {10}
+[1, 10] \ {9}
 
 ### 2019
 [1, 13 (part 1)]
 
 ### 2020
-[1, 20 (part 1), 21]
+[1, 22] \ {21 part 2}
