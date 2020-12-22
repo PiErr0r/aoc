@@ -26,7 +26,7 @@ def get_tiles(d, short = False):
 		id = int(tile[0][5:-1])
 		t = {
 			'id': id,
-			'tile': tile[1::] if not short else get_short(tile[1::]),
+			'tile': tile[1::],
 			'pos': None,
 			'neigh': set(),
 			'ass': [None, None, None, None],
@@ -74,22 +74,40 @@ def flip(t, dir):
 	elif dir == 'v':
 		return ["".join(r[i]) for r in t for i in range(len(t))]
 
+def rot(t):
+	nt = [list(i) for i in t]
+	nt = np.rot90(nt)
+	return ["".join(i) for i in t]
+
+def rot90(t, n = 1):
+	for i in range(n):
+		t = rot(t)
+	return t
+
 def change(t, i, j, rev):
 	if i == j:
 		if not rev: 
 			return flip(t, 'v' if i % 2 == 0 else 'h')
 		else:
-			return np.rot90(t, 2)
+			return rot90(t, 2)
 	elif i == (j + 2) % 4:
 		return t if rev else flip(t, 'h' if i & 1 else 'v')
 	elif i == 0 and j == 3:
-		return np.rot90(t, 3) if rev else flip(np.rot90(t, 3), 'v')
+		return rot90(t, 3) if rev else flip(rot90(t, 3), 'v')
 	elif i == 3 and j == 0:
-		return np.rot90(t) if rev else flip(np.rot90(t, 3), 'h')
+		return rot90(t) if rev else flip(rot90(t, 3), 'h')
 	elif i == 1 and j == 2:
-		return np.rot90(t) if rev else flip(np.rot90(t), 'h')
+		return rot90(t) if rev else flip(rot90(t), 'h')
 	elif i == 2 and j == 1:
-		return np.rot90(t) if rev else flip(np.rot90(t), 'v')
+		return rot90(t, 3) if rev else flip(rot90(t, 3), 'v')
+	elif i == 2 and j == 3:
+		return rot90(t) if rev else flip(rot90(t), 'v')
+	elif i == 3 and j == 2:
+		return rot90(t, 3) if rev else flip(rot90(t, 3), 'h')
+	elif i == 0 and j == 1:
+		return rot90(t) if rev else flip(rot90(t), 'v')
+	elif i == 1 and j == 0:
+		return rot90(t, 3) if rev else flip(rot90(t, 3), 'h')
 	else:
 		print("BAD")
 		return None
@@ -111,6 +129,7 @@ def set_tiles(tiles, i1, i2):
 				match = True
 				break
 		if match:
+			print(tiles[i1]['id'], tiles[i2]['id'])
 			tiles[i2]['ass'][j] = tiles[i1]['id']
 			tiles[i1]['set'] = True
 			tiles[i1]['tile'] = t1[::]
@@ -119,7 +138,8 @@ def set_tiles(tiles, i1, i2):
 	return tiles
 
 def assemble(tiles, i):
-	if tiles[i]['set'] == True:
+	print("NEW", tiles[i]['id'])
+	if len(tiles[i]['neigh']) == 0:
 		return tiles
 	tiles[i]['set'] = True
 	while len(tiles[i]['neigh']): 
@@ -131,20 +151,59 @@ def assemble(tiles, i):
 		tiles = assemble(tiles, j)
 	return tiles
 
+def get_pos(p, i):
+	x,y = p
+	if i == 0: return 	(x   ,y-1)
+	elif i == 1: return (x+1 ,y)
+	elif i == 2: return (x   ,y+1)
+	elif i == 3: return (x-1 ,y)
+
+def fill_grid_r(pos, g, tiles, t):
+	x, y = pos
+	if g[y][x] is not None:
+		return g
+	g[y][x] = t
+	tile = None
+	for i in tiles:
+		if i['id'] == t:
+			tile = i
+			break
+	for i, t_id in enumerate(tile['ass']):
+		p = get_pos(pos, i)
+		g = fill_grid_r(p, g, tiles, t_id)
+	return g
+
+def fill_grid(g, tiles):
+	x, y = (len(g) // 2, len(g) // 2)
+	t = tiles[0]
+	g[y][x] = t['id']
+	for i, t_id in enumerate(t['ass']):
+		print(t_id)
+		if t_id is not None:
+			p = get_pos((x, y), i)
+			g = fill_grid_r(p, g, tiles, t_id)
+	for i in g:
+		print(i)
+
 def parse(tiles):
 	for i in rl(tiles):
 		tiles[i]['tile'] = [r[1:-1] for r in tiles[i]['tile'][1:-1]]
 
+	grid = [[None for i in range(50)] for j in range(50)]
+	grid = fill_grid(grid, tiles)
+
 
 def part_2(tiles):
 	tiles = assemble(tiles, 0)
+	for t in tiles:
+		print(t)
 	img = parse(tiles)
 
 	monster = ['                  # ','#    ##    ##    ###', ' #  #  #  #  #  #   ']
 	monster_found = False
 	while not monster_found:
 		monster_found = has_monster(img, monster)
-		img = np.rot(img)
+		img = rot(img)
 
 	img = fill_mons(img, monster)
 	cnt = count_safe(img)
