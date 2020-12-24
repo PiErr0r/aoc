@@ -40,7 +40,50 @@ def part_1(data):
 	print('END OF PART1')
 	return
 
+def ls(a):
+	x = 1
+	for i in range(10):
+		print(x, end=" ")
+		x = a[x]
+	print()
+
 def part_2(data):
+
+	maxi = 1000000
+	ll = [None for i in range(maxi + 1)]
+	prev = 0
+	for i in data:
+		i = int(i)
+		ll[prev] = i
+		prev = i
+	ll[prev] = maxi
+	for i in range(10, maxi + 1):
+		ll[prev] = i
+		prev = i
+
+	x = ll[0]
+	ll[prev] = x
+	for move in range(10000000):
+		three = [None, None, None][::]
+		three[0] = ll[x]
+		three[1] = ll[three[0]]
+		three[2] = ll[three[1]]
+		xl = x - 1
+		while xl in three or xl == 0:
+			xl -= 1
+			if xl < 1:
+				xl = maxi
+		ll[x] = ll[three[2]]
+		tmp = ll[xl]
+		ll[xl] = three[0]
+		ll[three[2]] = tmp
+		x = ll[x]
+
+	ls(ll)
+	x = ll[1]
+	print(x, ll[x])
+	print(x * ll[x])
+
 	
 	print('END OF PART2')
 	return 
