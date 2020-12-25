@@ -96,7 +96,6 @@ def has_all_fields(data):
 
 def disp(grid):
 	for row in grid:
-		print(row, type(row))
 		if type(row) == str:
 			print(row)
 		else:

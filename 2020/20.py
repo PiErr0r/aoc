@@ -3,7 +3,7 @@ import math, copy, re, hashlib
 import itertools as it
 import numpy as np
 # import lib for year 2020
-from lib import check_data, parse_row, has_all_fields
+from lib import check_data, parse_row, has_all_fields, disp
 
 def rl(arr):
 	return range(len(arr))
@@ -68,85 +68,72 @@ def part_1(data):
 	part_2(tiles)
 	return
 
-def flip(t, dir):
-	if dir == 'h':
+def flip(t, f):
+	# f == horizontal
+	if f:
+		return ["".join(list(reversed(r))) for r in t]
+	else:
 		return t[::-1]
-	elif dir == 'v':
-		return ["".join(r[i]) for r in t for i in range(len(t))]
 
 def rot(t):
 	nt = [list(i) for i in t]
 	nt = np.rot90(nt)
-	return ["".join(i) for i in t]
+	return ["".join(i) for i in nt][::]
 
 def rot90(t, n = 1):
 	for i in range(n):
 		t = rot(t)
-	return t
+	return t[::]
 
 def change(t, i, j, rev):
+	# j = fixed
 	if i == j:
-		if not rev: 
-			return flip(t, 'v' if i % 2 == 0 else 'h')
-		else:
-			return rot90(t, 2)
-	elif i == (j + 2) % 4:
-		return t if rev else flip(t, 'h' if i & 1 else 'v')
-	elif i == 0 and j == 3:
-		return rot90(t, 3) if rev else flip(rot90(t, 3), 'v')
-	elif i == 3 and j == 0:
-		return rot90(t) if rev else flip(rot90(t, 3), 'h')
-	elif i == 1 and j == 2:
-		return rot90(t) if rev else flip(rot90(t), 'h')
-	elif i == 2 and j == 1:
-		return rot90(t, 3) if rev else flip(rot90(t, 3), 'v')
-	elif i == 2 and j == 3:
-		return rot90(t) if rev else flip(rot90(t), 'v')
-	elif i == 3 and j == 2:
-		return rot90(t, 3) if rev else flip(rot90(t, 3), 'h')
-	elif i == 0 and j == 1:
-		return rot90(t) if rev else flip(rot90(t), 'v')
-	elif i == 1 and j == 0:
-		return rot90(t, 3) if rev else flip(rot90(t, 3), 'h')
+		return rot90(t, 2) if rev else flip(rot90(t, 2), i % 2 == 0)
+	elif (i + 2) % 4 == j:
+		return t if rev else flip(t, i % 2 == 0)
+	elif (i + 1) % 4 == j:
+		return rot(t) if rev else flip(rot(t), i % 2 == 1)
+	elif i == (j + 1) % 4:
+		return rot90(t, 3) if rev else flip(rot90(t, 3), i % 2 == 1)
 	else:
 		print("BAD")
-		return None
+		exit(0)
+
 
 def set_tiles(tiles, i1, i2):
-	if tiles[i1]['set'] and tiles[i2]['set']:
-		return tiles
+	# if tiles[i1]['set']:
+	# 	return tiles
 	t1 = tiles[i1]['tile']
 	t2 = tiles[i2]['tile']
 	match = False
 	for i, r1 in enumerate([t1[0], "".join([r[-1] for r in t1]), ''.join(reversed(t1[-1])), "".join([r[0] for r in t1[::-1]])]):
 		for j, r2 in enumerate([t2[0], "".join([r[-1] for r in t2]), ''.join(reversed(t2[-1])), "".join([r[0] for r in t2[::-1]])]):
-			if r1 == r2:
-				t1 = change(t1, i, j, True)
+			if r1 == r2 or r1[::-1] == r2:
+				t1 = change(t1, i, j, r1[::-1] == r2)
 				match = True
 				break
-			elif ''.join(reversed(r1)) == r2:
-				t1 = change(t1, i, j, False)
-				match = True
-				break
+
 		if match:
-			print(tiles[i1]['id'], tiles[i2]['id'])
+			if tiles[i2]['ass'][j] is not None or tiles[i1]['ass'][(j + 2) % 4] is not None:
+				exit(1)
 			tiles[i2]['ass'][j] = tiles[i1]['id']
-			tiles[i1]['set'] = True
 			tiles[i1]['tile'] = t1[::]
 			tiles[i1]['ass'][(j + 2) % 4] = tiles[i2]['id']
 			break
 	return tiles
 
 def assemble(tiles, i):
-	print("NEW", tiles[i]['id'])
 	if len(tiles[i]['neigh']) == 0:
 		return tiles
 	tiles[i]['set'] = True
 	while len(tiles[i]['neigh']): 
 		id = tiles[i]['neigh'].pop()
-		for j, t in enumerate(tiles):
-			if id == t['id']:
+		j = 0
+		while j < len(tiles):
+			if id == tiles[j]['id']:
+				tiles[j]['neigh'] -= {tiles[i]['id']}
 				break
+			j += 1
 		tiles = set_tiles(tiles, j, i)
 		tiles = assemble(tiles, j)
 	return tiles
@@ -159,6 +146,8 @@ def get_pos(p, i):
 	elif i == 3: return (x-1 ,y)
 
 def fill_grid_r(pos, g, tiles, t):
+	if t is None:
+		return g
 	x, y = pos
 	if g[y][x] is not None:
 		return g
@@ -168,22 +157,44 @@ def fill_grid_r(pos, g, tiles, t):
 		if i['id'] == t:
 			tile = i
 			break
-	for i, t_id in enumerate(tile['ass']):
+	i = 0
+	
+	while i < len(tile['ass']):
+		t_id = tile['ass'][i]
 		p = get_pos(pos, i)
 		g = fill_grid_r(p, g, tiles, t_id)
+		i += 1
 	return g
+
+def get_s_tile(t_id, tiles):
+	i = 0
+	while i < len(tiles):
+		if tiles[i]['id'] == t_id:
+			return tiles[i]['tile'][::]
+		i += 1
 
 def fill_grid(g, tiles):
 	x, y = (len(g) // 2, len(g) // 2)
 	t = tiles[0]
 	g[y][x] = t['id']
 	for i, t_id in enumerate(t['ass']):
-		print(t_id)
 		if t_id is not None:
 			p = get_pos((x, y), i)
 			g = fill_grid_r(p, g, tiles, t_id)
-	for i in g:
-		print(i)
+	ret = []
+	for i, row in enumerate(g):
+		first = False
+		for j, col in enumerate(row):
+			if col is None:
+				continue
+			curr_tile = get_s_tile(col, tiles)
+			for _ in range(len(curr_tile)):
+				if not first:
+					ret.append(curr_tile[_])
+				else:
+					ret[(i - 15) * len(curr_tile) + _] += curr_tile[_]
+			first = True
+	return ret
 
 def parse(tiles):
 	for i in rl(tiles):
@@ -191,19 +202,117 @@ def parse(tiles):
 
 	grid = [[None for i in range(50)] for j in range(50)]
 	grid = fill_grid(grid, tiles)
+	return grid
 
+def is_monster(g, pos, m):
+	y, x = pos
+	h = len(m)
+	w = len(m[0])
+	m_cnt, g_cnt = 0, 0
+
+	for i in range(h):
+		for j in range(w):
+			if m[i][j] == ' ':
+				continue
+			m_cnt += 1
+			if g[y+i][x+j] in ['#', 'o']:
+				g_cnt += 1
+	return m_cnt == g_cnt
+
+def has_monster(img, monster):
+	h = len(monster)
+	w = len(monster[0])
+	
+	i = 0
+	while i < len(img) - h:
+		j = 0
+		while j < len(img[0]) - w:
+			if is_monster(img, (i, j), monster):
+				print(i, j)
+				return True
+			j += 1
+		i += 1
+	return False
+
+def fill_s_mons(g, pos, m):
+	y, x = pos
+	h, w = len(m), len(m[0])
+	for i in range(h):
+		for j in range(w):
+			if m[i][j] == '#':
+				g[y+i] = g[y+i][:x+j] + 'o' + g[y+i][x+j + 1:]
+	return g
+
+def fill_mons(img, m):
+	h, w = len(m), len(m[0])
+	i = 0
+	while i < len(img) - h:
+		j = 0
+		while j < len(img[0]) - w:
+			if is_monster(img, (i, j), m):
+				img = fill_s_mons(img, (i, j), m)
+			j += 1
+		i += 1
+	return img
+
+def count_safe(img):
+	cnt = 0
+	for r in img:
+		for c in r:
+			cnt += c == '#'
+	return cnt
 
 def part_2(tiles):
 	tiles = assemble(tiles, 0)
-	for t in tiles:
-		print(t)
 	img = parse(tiles)
 
-	monster = ['                  # ','#    ##    ##    ###', ' #  #  #  #  #  #   ']
+	monster = ['                  # '
+						,'#    ##    ##    ###'
+						,' #  #  #  #  #  #   ']
+	xximg = [".#.#..#.##...#.##..#####",
+	"###....#.#....#..#......",
+	"##.##.###.#.#..######...",
+	"###.#####...#.#####.#..#",
+	"##.#....#.##.####...#.##",
+	"...########.#....#####.#",
+	"....#..#...##..#.#.###..",
+	".####...#..#.....#......",
+	"#..#.##..#..###.#.##....",
+	"#.####..#.####.#.#.###..",
+	"###.#.#...#.######.#..##",
+	"#.####....##..########.#",
+	"##..##.#...#...#.#.#.#..",
+	"...#..#..#.#.##..###.###",
+	".#.#....#.##.#...###.##.",
+	"###.#...#..#.##.######..",
+	".#.#.###.##.##.#..#.##..",
+	".####.###.#...###.#..#.#",
+	"..#.#..#..#.#.#.####.###",
+	"#..####...#.#.#.###.###.",
+	"#####..#####...###....##",
+	"#.##..#..#...#..####...#",
+	".#.###..##..##..####.##.",
+	"...###...##...#...#..###"]
 	monster_found = False
-	while not monster_found:
-		monster_found = has_monster(img, monster)
-		img = rot(img)
+	cnt = 0
+	fnc = {
+		4: lambda x: flip(x, 'h'),
+		5: lambda x: flip(rot90(x), 'h'),
+		6: lambda x: flip(rot90(x, 2), 'h'),
+		7: lambda x: flip(rot90(x, 3), 'h')
+	}
+	nimg = img[::]
+	while not has_monster(nimg, monster):
+		if cnt < 4:
+			nimg = rot(nimg)
+		else:
+			nimg = fnc[cnt](img[::])
+		cnt += 1
+
+	if cnt < 4:
+		img = nimg[::]
+	else:
+		img = fnc[cnt - 1](img)
 
 	img = fill_mons(img, monster)
 	cnt = count_safe(img)
