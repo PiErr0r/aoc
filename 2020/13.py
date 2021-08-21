@@ -152,3 +152,31 @@ if __name__ == '__main__':
 	part_1(copy.deepcopy(data))
 	part_2(copy.deepcopy(data))
 	
+"""
+# my solution after learning more about crt
+def find_x(a, b, c):
+    i = 1
+    while True:
+        if a * i % c == b:
+            break
+        i += 1
+    return i
+
+def crt(t):
+    n = 1
+    for i in t:
+        n *= i[0]
+    ns = [n / i[0] for i in t]
+    sols = [find_x(ns[i], t[i][1], t[i][0]) for i in range(len(t))]
+    res = 0
+    for i in range(len(t)):
+        res += ns[i] * sols[i]
+    return res % n
+
+ex1 = [(5, 2), (7, 3), (11, 4)]
+ex2 = [(7, 0), (13, 12), (59, 55), (31, 25), (19, 12)]
+ex = [(67, 0), (7, 6), (59, 56), (61, 57)]
+ans = crt(ex)
+print(ans)
+
+"""
