@@ -49,7 +49,7 @@ This script should be used *during* the day you want to solve the problem becaus
 [1, 24] \ {11, 22 part(2)}
 
 ### 2017
-[1, 24]
+[1, 25]
 
 ### 2018
 [1, 10] \ {9}
