@@ -36,7 +36,7 @@ def main(*args):
 import math, copy, re, hashlib
 import itertools as it
 # import lib for year 2020
-from lib import check_data, parse_row, has_all_fields
+# from lib import check_data, parse_row, has_all_fields
 
 def rl(arr):
 	return range(len(arr))
