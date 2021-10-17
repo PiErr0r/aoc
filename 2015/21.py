@@ -16,7 +16,7 @@ def fight(me, boss):
 
 def buy_stuff(shop):
 	combs = [i for i in shop['weapons']] + list(product(shop['weapons'], shop['armor'])) + list(product(shop['weapons'], shop['rings'])) + list(product(shop['weapons'], combinations(shop['rings'], 2))) + list(product(shop['weapons'], shop['armor'], shop['rings'])) + list(product(shop['weapons'], shop['armor'], combinations(shop['rings'], 2)))
-	print(len(combs))
+	# print(len(combs))
 	for comb in combs:
 		me = dict(dmg=0, ac=0, cost=0, hp=100)
 		for item in comb:
