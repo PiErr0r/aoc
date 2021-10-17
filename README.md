@@ -43,7 +43,7 @@ This script should be used *during* the day you want to solve the problem becaus
 ## Solved
 
 ### 2015
-[1, 23] \ {22}
+[1, 24] \ {22}
 
 ### 2016
 [1, 24] \ {11, 22 part(2)}
