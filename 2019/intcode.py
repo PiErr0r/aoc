@@ -34,13 +34,14 @@ class IntCode(object):
 	    rel_pos (int): address of the relative instruction pointer
 	
 	"""
-	def __init__(self, data, input_data = None, debug = False):
+	def __init__(self, data, input_data = None, debug = False, disp_pause = False):
 		"""initialize the program
 		
 		Args:
 		    data (list): data/instruction of the program
 		    input_data (None, optional): input buffer
 		    debug (bool, optional): debugging flag
+		    disp_pause (bool, optional): display "PAUSED" when program waits for input
 		"""
 		super(IntCode, self).__init__()
 
@@ -268,7 +269,8 @@ class IntCode(object):
 			self.set_data(in_pos, in_val)
 			self.pos += 2
 		else:
-			print("PAUSED")
+			if self.disp_pause:
+				print("PAUSED")
 			self.pause = True
 
 	def output(self, p_addr = 0):
