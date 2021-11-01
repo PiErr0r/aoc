@@ -7,32 +7,21 @@ from datetime import datetime
 
 NOW = datetime.now()
 
-USE_ARG = """get_day expects two arguments: a year and a day 
-eg. ./get_day 2017 6
+USE_ARG = """get_day expects three arguments: <year> <day> <ext>
+<year> = [2015, <current_year>]
+<day>  = [1, 25]
+<ext>  = py | js
+eg. ./get_day 2017 6 js
 """
 USE_TYPE = """Both year and day must be numbers (integers)
 """
 USE_YEAR_LOW = "Cannot fetch year before 2015"
 USE_YEAR_HIGH = f"Cannot fetch year after {NOW.year}"
-USE_MONTH = "Day must be in interval [1,25]!"
+USE_DAY = "Day must be in interval [1,25]!"
+USE_EXT = "Extension must be 'js' or 'py'"
 USE_NOT_STARTED = "current year Advent of Code hasn't started yet!"
 
-
-def main(*args):
-	[year, day] = args
-
-	with open('session', 'r') as f:
-		session = f.read()
-	
-	if len(session) == 0:
-		return
-	url = f'https://adventofcode.com/{year}/day/{day}'
-	url_input = url + '/input'
-	cookies = dict(session=session)
-	if len(str(day)) == 1:
-		day = '0' + day
-
-	program_text = """
+program_text_py = """
 import math, copy, re, hashlib
 import itertools as it
 # import lib for year 2020
@@ -60,9 +49,54 @@ if __name__ == '__main__':
 
 	part_1(copy.deepcopy(data))
 	part_2(copy.deepcopy(data))
-	""".format(day)
+"""
+
+program_text_js = """
+var fs = require('fs');
+var {{ debug }} = require("../helpers");
+
+function part1(data) {{
 
 
+	console.log("END OF PART1");
+	return;
+}}
+
+function part2(data) {{
+
+
+	console.log("END OF PART2");
+	return;
+}}
+
+function main() {{
+	let data = fs.readFileSync("{0}_input").toString("utf-8");
+	data = data.split('\\n');
+	data = data.split('').map(a => Number(a));
+
+	part1(data);
+	part2(data);
+}}
+
+main();
+"""
+
+def main(*args):
+	[year, day, ext] = args
+
+	with open('session', 'r') as f:
+		session = f.read()
+	
+	if len(session) == 0:
+		return
+
+	url = f'https://adventofcode.com/{year}/day/{day}'
+	url_input = url + '/input'
+	cookies = dict(session=session)
+	if len(str(day)) == 1:
+		day = '0' + day
+
+	program_text = program_text_py.format(day) if ext == 'py' else program_text_js.format(day)
 	r = requests.get(url, cookies=cookies)
 	r_input = requests.get(url_input, cookies=cookies)
 
@@ -103,7 +137,7 @@ if __name__ == '__main__':
 				if txt == '\n':
 					k = i
 					
-	with open(f'./{year}/{day}.py', 'w') as f:
+	with open(f'./{year}/{day}.{ext}', 'w') as f:
 		f.write(program_text)
 
 	with open("fetch_day_time", 'w') as f:
@@ -114,11 +148,12 @@ if __name__ == '__main__':
 
 if __name__ == '__main__':
 	
-	if len(sys.argv[1:]) != 2:
+	if len(sys.argv[1:]) != 3:
 		print(USE_ARG)
 	else:
 		try:
-			[year, day] = list(map(int, sys.argv[1:]))
+			[year, day] = list(map(int, sys.argv[1:3]))
+			ext = sys.argv[3]
 			if year < 2015:
 				print(USE_YEAR_LOW)
 			elif year > NOW.year:
@@ -130,8 +165,10 @@ if __name__ == '__main__':
 					if day < 1 or day > 25:
 						print(USE_DAY)
 					else:
-						main(*sys.argv[1:])
-
+						if ext not in ['js', 'py']:
+							print(USE_EXT)
+						else:
+							main(*sys.argv[1:])
 			
 		except Exception as ex:
 			print(USE_ARG)
