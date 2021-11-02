@@ -31,7 +31,7 @@ class IntCode {
 			"06": (x) => this.jz(				...this.getMode(x, 2)),
 			"07": (x) => this.lt(				...this.getMode(x, 3)),
 			"08": (x) => this.eq(				...this.getMode(x, 3)),
-			"09": (x) => this.rel_base(	...this.getMode(x, 1)),
+			"09": (x) => this.relBase(	...this.getMode(x, 1)),
 			"99": (x) => this.halt()
 		}
 	}
@@ -136,6 +136,18 @@ class IntCode {
 	}
 
 	jnz(fAddr = 0, sAddr = 0) {
+		const fPos = this.getAddress(fAddr, 1);
+		const sPos = this.getAddress(sAddr, 2);
+		const cond = this.getData(fPos) !== 0;
+
+		if (cond) {
+			this.pos = this.getData(sPos);
+		} else {
+			this.pos += 3;
+		}
+	}
+
+	jz(fAddr = 0, sAddr = 0) {
 		const fPos = this.getAddress(fAddr, 1);
 		const sPos = this.getAddress(sAddr, 2);
 		const cond = this.getData(fPos) === 0;

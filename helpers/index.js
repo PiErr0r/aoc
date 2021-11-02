@@ -1,4 +1,15 @@
 
+function disp(grid) {
+	for (let i = 0; i < grid.length; ++i) {
+		if (Array.isArray(grid[i])) 
+			console.log("%s", grid[i].join(''));
+		else {
+			console.log("%s", grid[i]);
+		}
+	}
+	console.log();
+}
+
 function debug(...data) {
 	let msg = '';
 	data.forEach(dIn => {
@@ -13,14 +24,15 @@ function debug(...data) {
 		} else if (typeof dIn === 'string') {
 			msg += '%s ';
 		} else {
-			msg += '%j ';
+			msg += dIn instanceof Set ? '%o ' : '%j ';
 		}
 	});
 	console.log(msg, ...data);
 }
 
-function range(start, end, step = 1) {
+function range(start, end = null, step = 1) {
 	if (step === 0) throw new Error("Zero step!");
+	if (end === null) { end = start; start = 0; }
 	const cond = step < 0 ? (n) => n > end : (n) => n < end;
 	return (fn) => {
 		let res = true;
@@ -31,8 +43,9 @@ function range(start, end, step = 1) {
 	}
 }
 
-function drange(start, end, step = 1) {
+function drange(start, end = null, step = 1) {
 	if (step === 0) throw new Error("Zero step!");
+	if (end === null) { end = start; start = 0; }
 	const cond = step < 0 ? (n) => n > end : (n) => n < end;
 	return (fn) => {
 		let res = true;
@@ -45,8 +58,9 @@ function drange(start, end, step = 1) {
 	}
 }
 
-function trange(start, end, step = 1) {
+function trange(start, end = null, step = 1) {
 	if (step === 0) throw new Error("Zero step!");
+	if (end === null) { end = start; start = 0; }
 	const cond = step < 0 ? (n) => n > end : (n) => n < end;
 	return (fn) => {
 		let res = true;
@@ -61,6 +75,7 @@ function trange(start, end, step = 1) {
 	}
 }
 
+module.exports.disp = disp;
 module.exports.debug = debug;
 module.exports.range = range;
 module.exports.drange = drange;
