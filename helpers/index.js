@@ -75,8 +75,13 @@ function trange(start, end = null, step = 1) {
 	}
 }
 
+// const ord = (c) => (c.charCodeAt(0));
+// const chr = (n) => (String.fromCharCode(n));
+
 module.exports.disp = disp;
 module.exports.debug = debug;
 module.exports.range = range;
 module.exports.drange = drange;
 module.exports.trange = trange;
+module.exports.ord = (c) => (c.charCodeAt(0));
+module.exports.chr = (n) => (String.fromCharCode(n));

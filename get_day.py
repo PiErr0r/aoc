@@ -53,7 +53,7 @@ if __name__ == '__main__':
 
 program_text_js = """
 var fs = require('fs');
-var {{ debug, range, drange, trange }} = require("../helpers");
+var {{ ord, chr, debug, disp, range, drange, trange }} = require("../helpers");
 
 function part1(data) {{
 
