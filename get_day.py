@@ -53,7 +53,8 @@ if __name__ == '__main__':
 
 program_text_js = """
 var fs = require('fs');
-var {{ ord, chr, debug, disp, range, drange, trange }} = require("../helpers");
+var {{ ord, chr, debug, disp, range, drange, trange, int, float, randint }} = require("../helpers");
+const {{ min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI }} = Math;
 
 function part1(data) {{
 
