@@ -8,5 +8,6 @@ module.exports = {
 	...require('./logging'),
 	...require('./range'),
 	...require('./string'),
-	...require('./math')
+	...require('./math'),
+	...require('./set'),
 }
