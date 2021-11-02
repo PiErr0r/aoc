@@ -53,6 +53,7 @@ class IntCode(object):
 		self.out_param = []
 		self.pause = False
 		self.debug = debug
+		self.disp_pause = disp_pause
 
 		# registers for data outside of the scope of the program length
 		self.regs = dict()

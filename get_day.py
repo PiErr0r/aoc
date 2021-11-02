@@ -53,7 +53,7 @@ if __name__ == '__main__':
 
 program_text_js = """
 var fs = require('fs');
-var {{ debug }} = require("../helpers");
+var {{ debug, range, drange, trange }} = require("../helpers");
 
 function part1(data) {{
 
@@ -74,8 +74,13 @@ function main() {{
 	data = data.split('\\n');
 	data = data.split('').map(a => Number(a));
 
-	part1(data);
-	part2(data);
+	if (Array.isArray(data)) {{
+		part1(Array.from(data));
+		part2(Array.from(data));
+	}} else {{
+		part1(data);
+		part2(data);
+	}}
 }}
 
 main();
