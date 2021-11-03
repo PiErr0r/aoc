@@ -217,7 +217,8 @@ class IntCode {
 	}
 
 	halt() {
-		console.log("HALT");
+		if (this.dispPause)
+			console.log("HALT");
 		this.pos = -1;
 	}
 
