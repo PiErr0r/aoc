@@ -55,7 +55,7 @@ This script should be used *during* the day you want to solve the problem becaus
 [1, 10] \ {9}
 
 ### 2019
-[1, 17]
+[1, 19] \ {18}
 
 ### 2020
 [1, 25]
