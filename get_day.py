@@ -53,7 +53,7 @@ if __name__ == '__main__':
 
 program_text_js = """
 var fs = require('fs');
-var {{ ord, chr, debug, disp, range, drange, trange, int, float, randint, set }} = require("../helpers");
+var {{ ord, chr, debug, disp, range, drange, trange, int, float, randint, set, gcd, lcm, crt, modPow }} = require("../helpers");
 const {{ min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI }} = Math;
 const {{ isSuperset, or, and, xor, sub }} = set;
 
