@@ -19,7 +19,7 @@ USE_YEAR_LOW = "Cannot fetch year before 2015"
 USE_YEAR_HIGH = f"Cannot fetch year after {NOW.year}"
 USE_DAY = "Day must be in interval [1,25]!"
 USE_EXT = "Extension must be 'js' or 'py'"
-USE_NOT_STARTED = "current year Advent of Code hasn't started yet!"
+USE_NOT_STARTED = "current year Advent of Code didn't start yet!"
 
 program_text_py = """
 import math, copy, re, hashlib
@@ -53,9 +53,14 @@ if __name__ == '__main__':
 
 program_text_js = """
 var fs = require('fs');
-var {{ ord, chr, debug, disp, range, drange, trange, int, float, randint, set, gcd, lcm, crt, modPow }} = require("../helpers");
+const {{ ord, chr, debug, disp, range, drange, trange, int, float, randint, gcd, lcm, crt, modPow, mod }} = require("../lib");
+const {{ PriorityQueue, Queue, set, Stack }} = require("../lib");
 const {{ min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI }} = Math;
 const {{ isSuperset, or, and, xor, sub }} = set;
+
+const D4 = [[0,1],[1,0],[0,-1],[-1,0]];
+const D8 = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]];
+const MOD = 1e9+7;
 
 function part1(data) {{
 
