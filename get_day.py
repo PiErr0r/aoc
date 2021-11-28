@@ -58,6 +58,10 @@ const {{ PriorityQueue, Queue, set, Stack }} = require("../lib");
 const {{ min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI }} = Math;
 const {{ isSuperset, or, and, xor, sub }} = set;
 
+const sort = (arr, fn = (a, b) => a-b) {{
+	arr.sort(fn);
+}}
+
 const D4 = [[0,1],[1,0],[0,-1],[-1,0]];
 const D8 = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]];
 const MOD = 1e9+7;
