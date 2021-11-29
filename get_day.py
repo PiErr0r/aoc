@@ -53,7 +53,8 @@ if __name__ == '__main__':
 
 program_text_js = """
 var fs = require('fs');
-const {{ ord, chr, debug, disp, range, drange, trange, int, float, randint, gcd, lcm, crt, modPow, mod }} = require("../lib");
+const {{ ord, chr, debug, disp, int, float, randint, gcd, lcm, crt, modPow, mod }} = require("../lib");
+const {{ range, drange, trange, iter, diter, titer }} = require("../lib");
 const {{ PriorityQueue, Queue, set, Stack }} = require("../lib");
 const {{ min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI }} = Math;
 const {{ isSuperset, or, and, xor, sub }} = set;
@@ -61,6 +62,7 @@ const {{ isSuperset, or, and, xor, sub }} = set;
 const sort = (arr, fn = (a, b) => a-b) => {{
 	arr.sort(fn);
 }}
+const in_ = (a, arr) => arr.indexOf(a) !== -1;
 
 const D4 = [[0,1],[1,0],[0,-1],[-1,0]];
 const D8 = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]];
@@ -83,7 +85,7 @@ function part2(data) {{
 function main() {{
 	let data = fs.readFileSync("{0}_input").toString("utf-8");
 	data = data.split('\\n');
-	data = data.split('').map(a => Number(a));
+	data = data.split('\\n').map(a => Number(a));
 
 	if (Array.isArray(data)) {{
 		part1(Array.from(data));
