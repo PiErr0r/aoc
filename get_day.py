@@ -85,7 +85,7 @@ function part2(data) {{
 function main() {{
 	let data = fs.readFileSync("{0}_input").toString("utf-8");
 	data = data.split('\\n');
-	data = data.split('\\n').map(a => Number(a));
+	// data = data.split('\\n').map(a => Number(a));
 
 	if (Array.isArray(data)) {{
 		part1(Array.from(data));
