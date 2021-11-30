@@ -16,7 +16,7 @@ const D8 = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]];
 const MOD = 1e9+7;
 
 const parse = (data) => {
-	return data.map(r => r.split(',').map(a => int(a.trim())));
+	return data.map(r => r.split(',').map(int));
 }
 
 const manDist = (c1, c2) => {

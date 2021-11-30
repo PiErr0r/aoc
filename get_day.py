@@ -54,7 +54,7 @@ if __name__ == '__main__':
 program_text_js = """
 const fs = require('fs');
 const {{ exec }} = require("child_process");
-const {{ ord, chr, debug, disp, int, float, randint, gcd, lcm, crt, modPow, mod }} = require("../lib");
+const {{ ord, chr, debug, disp, int, num, float, randint, gcd, lcm, crt, modPow, mod }} = require("../lib");
 const {{ range, drange, trange, iter, diter, titer }} = require("../lib");
 const {{ PriorityQueue, Queue, set, Stack }} = require("../lib");
 const {{ min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI }} = Math;
@@ -71,15 +71,18 @@ const MOD = 1e9+7;
 
 function part1(data) {{
 
+	let res;
 
-	exec(`echo ${{}} | xclip -sel clip -rmlastnl`);
+	exec(`echo ${{res}} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART1");
 	return;
 }}
 
 function part2(data) {{
 
-	// exec(`echo ${{}} | xclip -sel clip -rmlastnl`);
+	let res;
+
+	// exec(`echo ${{res}} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART2");
 	return;
 }}
