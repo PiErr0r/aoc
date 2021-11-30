@@ -1,5 +1,5 @@
-
-var fs = require('fs');
+const fs = require('fs');
+const { exec } = require("child_process");
 const { ord, chr, debug, disp, int, float, randint, gcd, lcm, crt, modPow, mod } = require("../lib");
 const { range, drange, trange, iter, diter, titer } = require("../lib");
 const { PriorityQueue, Queue, set, Stack } = require("../lib");
@@ -25,6 +25,7 @@ function part1(data) {
 	})
 
 	debug(res)
+	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 
 	console.log("END OF PART1");
 	return;
@@ -47,6 +48,8 @@ function part2(data) {
 			}
 		})
 	}
+
+	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 
 	console.log("END OF PART2");
 	return;
