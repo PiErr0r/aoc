@@ -57,6 +57,7 @@ const {{ exec }} = require("child_process");
 const {{ ord, chr, debug, disp, int, num, float, randint, gcd, lcm, crt, modPow, mod }} = require("../lib");
 const {{ range, drange, trange, iter, diter, titer }} = require("../lib");
 const {{ PriorityQueue, Queue, set, Stack }} = require("../lib");
+const {{ ints,	floats,	singles,	words,	lines,	table,	groups,	getGroups,	groupsWith,	parse,	parseLine }} = require ('../lib');
 const {{ min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI }} = Math;
 const {{ isSuperset, or, and, xor, sub }} = set;
 
@@ -89,16 +90,10 @@ function part2(data) {{
 
 function main() {{
 	let data = fs.readFileSync("{0}_input").toString("utf-8");
-	data = data.split('\\n');
-	// data = data.split('\\n').map(a => Number(a));
 
-	if (Array.isArray(data)) {{
-		part1(Array.from(data));
-		part2(Array.from(data));
-	}} else {{
-		part1(data);
-		part2(data);
-	}}
+	part1(data);
+	part2(data);
+
 }}
 
 main();

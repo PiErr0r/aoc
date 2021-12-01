@@ -64,6 +64,23 @@ function part2(data) {
 	return;
 }
 
+function part2_alternative(data) {
+
+	let res = 0;
+	
+	range(data.length - 3)(i => {
+		if (data[i] < data[i + 3]) {
+			++res;
+		}
+	})
+	
+	debug(res)
+
+	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
+	console.log("END OF PART2 Alternative");
+	return;
+}
+
 function main() {
 	let data = fs.readFileSync("01_input").toString("utf-8");
 	// data = data.split('\n');
@@ -72,6 +89,7 @@ function main() {
 	if (Array.isArray(data)) {
 		part1(Array.from(data));
 		part2(Array.from(data));
+		part2_alternative(Array.from(data));
 	} else {
 		part1(data);
 		part2(data);
