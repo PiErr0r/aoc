@@ -4,6 +4,7 @@ const { exec } = require("child_process");
 const { ord, chr, debug, disp, int, num, float, randint, gcd, lcm, crt, modPow, mod } = require("../lib");
 const { range, drange, trange, iter, diter, titer } = require("../lib");
 const { PriorityQueue, Queue, set, Stack } = require("../lib");
+const { ints,	floats,	singles,	words,	lines,	table,	groups,	getGroups,	groupsWith,	parse,	parseLine } = require ('../lib');
 const { min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI } = Math;
 const { isSuperset, or, and, xor, sub } = set;
 
@@ -18,15 +19,24 @@ const MOD = 1e9+7;
 
 function part1(data) {
 
-	let res = 0 ;
-	let prev = 1e9;
+	let res;
+	data = parse(data, 'w d');
+
+	let x = 0, depth = 0;
+
 	iter(data)(i => {
-		if (i > prev) {
-			++res;
+		let [move, d] = i;
+		if (move === 'forward') {
+			x += d;
+		} else if (move === 'up') {
+			depth -= d;
+		} else if (move === 'down') {
+			depth += d; 
 		}
-		prev = i
 	})
-	debug(res)
+	res = x * depth;
+	debug(res);
+
 	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART1");
 	return;
@@ -34,29 +44,25 @@ function part1(data) {
 
 function part2(data) {
 
-	let res = 0;
-	let sums = [];
-	let cnts = [];
+
+	let res;
+	data = parse(data, 'w d');
+
+	let x = 0, depth = 0, aim = 0;
+
 	iter(data)(i => {
-		cnts.push(0);
-		sums.push(0);
+		let [move, d] = i;
 
-		range(max(cnts.length - 3, 0), cnts.length)(j => {
-			if (cnts[j] < 3) {
-				sums[j] += i;
-			}
-			cnts[j]++;
-		});
-	});
-	
-	let prev = 1e9;
-	iter(sums)(i => {
-		if (i > prev) {
-			++res;
+		if (move === 'forward') {
+			x += d;
+			depth += aim * d;
+		} else if (move === 'up') {
+			aim -= d;
+		} else if (move === 'down') {
+			aim += d;
 		}
-		prev = i;
-	});
-
+	})
+	res = depth * x;
 	debug(res)
 
 	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
@@ -64,36 +70,12 @@ function part2(data) {
 	return;
 }
 
-function part2_alternative(data) {
-
-	let res = 0;
-	
-	range(data.length - 3)(i => {
-		if (data[i] < data[i + 3]) {
-			++res;
-		}
-	})
-	
-	debug(res)
-
-	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
-	console.log("END OF PART2 Alternative");
-	return;
-}
-
 function main() {
-	let data = fs.readFileSync("01_bigboy").toString("utf-8");
-	// data = data.split('\n');
-	data = data.split('\n').map(a => Number(a));
+	let data = fs.readFileSync("02_input").toString("utf-8");
 
-	if (Array.isArray(data)) {
-		part1(Array.from(data));
-		part2(Array.from(data));
-		// part2_alternative(Array.from(data));
-	} else {
-		part1(data);
-		part2(data);
-	}
+	part1(data);
+	part2(data);
+
 }
 
 main();
