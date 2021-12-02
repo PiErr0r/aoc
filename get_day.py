@@ -53,7 +53,6 @@ if __name__ == '__main__':
 
 program_text_js = """
 const fs = require('fs');
-const {{ sendData }} = require("../lib/send_data");
 const {{ exec }} = require("child_process");
 const {{ ord, chr, debug, disp, int, num, float, randint, gcd, lcm, crt, modPow, mod }} = require("../lib");
 const {{ range, drange, trange, iter, diter, titer }} = require("../lib");
@@ -75,8 +74,8 @@ function part1(data) {{
 
 	let res;
 
+	debug(res);
 	exec(`echo ${{res}} | xclip -sel clip -rmlastnl`);
-	// sendData({1}, {0}, res, 1)
 	console.log("END OF PART1");
 	return;
 }}
@@ -85,8 +84,8 @@ function part2(data) {{
 
 	let res;
 
+	debug(res);
 	// exec(`echo ${{res}} | xclip -sel clip -rmlastnl`);
-	// sendData({1}, {0}, res, 2)
 	console.log("END OF PART2");
 	return;
 }}
