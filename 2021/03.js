@@ -17,23 +17,40 @@ const D4 = [[0,1],[1,0],[0,-1],[-1,0]];
 const D8 = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]];
 const MOD = 1e9+7;
 
+const binBigInt = (n) => {
+	let res = 0n;
+	for (let i = 0n; i < n.length; ++i) {
+		if (n[i] === '1') {
+			res += (1n << (BigInt(n.length) - i - 1n));
+		}
+	}
+	return res;
+}
+
 function part1(data) {
 
 	data = lines(data);
-	let res = empty(data[0].length);
+	let res = new Array(data[0].length).fill(0).map(a => 0n);
 
 	iter(data,i => {
 		range(i.length)(j => {
-			res[j] += int(i[j]);
+			res[j] += binBigInt(i[j]);
 		}) 
 	}); 
 
-	let g = num(res.map(a => a >= data.length / 2 ? '1' : '0').join(''), 2);
-	let e = num(res.map(a => a > data.length / 2 ? '0' : '1').join(''), 2);
-	res = g*e;
-	debug(BigInt(g) * BigInt(e))
-	debug(res);
-	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
+	let g = 0n, e = 0n, l = BigInt(res.length), d = BigInt(data.length);
+	for (let i = 0n; i < res.length; ++i) {
+		if (res[i] >= d / 2n) {
+			g += (1n << (l - i - 1n));	
+		} else {
+			e += (1n << (l - i - 1n))
+		}
+	}
+
+	// debug(g, e)
+	debug(g * e)
+	// debug(res);
+	// exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART1");
 	return;
 }
@@ -74,7 +91,6 @@ function part2(data) {
 
 function main() {
 	let data = fs.readFileSync("03_input").toString("utf-8");
-
 	part1(data);
 	part2(data);
 
@@ -82,7 +98,7 @@ function main() {
 
 	part1(dataBB);
 	part2(dataBB);
-
+	process.exit(0);
 }
 
 main();
