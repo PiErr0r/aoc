@@ -54,9 +54,10 @@ if __name__ == '__main__':
 program_text_js = """
 const fs = require('fs');
 const {{ exec }} = require("child_process");
-const {{ ord, chr, count, debug, disp, int, num, float, randint, gcd, lcm, crt, modPow, mod }} = require("../lib");
+const {{ bin, float, int, num }} = require("../lib");
+const {{ ord, chr, count, debug, disp, randint, gcd, lcm, crt, modPow, mod }} = require("../lib");
 const {{ range, drange, trange, iter, diter, titer }} = require("../lib");
-const {{ PriorityQueue, Queue, set, Stack }} = require("../lib");
+const {{ empty, PriorityQueue, Queue, set, Stack }} = require("../lib");
 const {{ ints,	floats,	singles,	words,	lines,	table,	groups,	getGroups,	groupsWith,	parse,	parseLine }} = require ('../lib');
 const {{ min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI }} = Math;
 const {{ isSuperset, or, and, xor, sub }} = set;
