@@ -31,7 +31,7 @@ function part1(data) {
 	let g = num(res.map(a => a >= data.length / 2 ? '1' : '0').join(''), 2);
 	let e = num(res.map(a => a > data.length / 2 ? '0' : '1').join(''), 2);
 	res = g*e;
-
+	debug(BigInt(g) * BigInt(e))
 	debug(res);
 	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART1");
@@ -50,9 +50,6 @@ const getCnt = (data, pos) => {
 function part2(data) {
 
 	data = lines(data);
-	let res;
-
-
 	let O = [...data], CO2 = [...data];
 
 	let i = 0;
@@ -68,7 +65,7 @@ function part2(data) {
 		++i;
 	}
 
-	res = num(O.join(''),2) * num(CO2.join(''), 2);
+	let res = num(O.join(''),2) * num(CO2.join(''), 2);
 	debug(res);
 	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART2");
@@ -80,6 +77,11 @@ function main() {
 
 	part1(data);
 	part2(data);
+
+	let dataBB = fs.readFileSync("03_bigboy").toString("utf-8");
+
+	part1(dataBB);
+	part2(dataBB);
 
 }
 
