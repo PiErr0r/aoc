@@ -32,7 +32,7 @@ function part1(data) {
 	const fabric = new Array(1000).fill(0).map(r => new Array(1000).fill(0));
 	let res = 0;
 
-	iter(data)(rect => {
+	iter(data,rect => {
 		const { x, y, w, h, id } = rect;
 		let hasOl = false;
 		range(x, x+w)(i => {
@@ -42,8 +42,8 @@ function part1(data) {
 		});
 	})
 
-	iter(fabric)(r => {
-		iter(r)(c => {
+	iter(fabric,r => {
+		iter(r,c => {
 			if (c > 1) ++res;
 		})
 	})
@@ -60,7 +60,7 @@ function part2(data) {
 	const fabric = new Array(1000).fill(0).map(r => new Array(1000).fill(0));
 	
 	const s = new set();
-	iter(data)(rect => {
+	iter(data,rect => {
 		const { x, y, w, h, id } = rect;
 		s.add(id);
 		let hasOl = false;

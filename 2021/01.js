@@ -20,7 +20,7 @@ function part1(data) {
 
 	let res = 0 ;
 	let prev = 1e9;
-	iter(data)(i => {
+	iter(data,i => {
 		if (i > prev) {
 			++res;
 		}
@@ -37,7 +37,7 @@ function part2(data) {
 	let res = 0;
 	let sums = [];
 	let cnts = [];
-	iter(data)(i => {
+	iter(data,i => {
 		cnts.push(0);
 		sums.push(0);
 
@@ -50,7 +50,7 @@ function part2(data) {
 	});
 	
 	let prev = 1e9;
-	iter(sums)(i => {
+	iter(sums,i => {
 		if (i > prev) {
 			++res;
 		}

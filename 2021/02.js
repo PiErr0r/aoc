@@ -24,7 +24,7 @@ function part1(data) {
 
 	let x = 0, depth = 0;
 
-	iter(data)(i => {
+	iter(data,i => {
 		let [move, d] = i;
 		if (move === 'forward') {
 			x += d;
@@ -50,7 +50,7 @@ function part2(data) {
 
 	let x = 0, depth = 0, aim = 0;
 
-	iter(data)(i => {
+	iter(data,i => {
 		let [move, d] = i;
 
 		if (move === 'forward') {

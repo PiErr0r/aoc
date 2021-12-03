@@ -24,7 +24,7 @@ const parse = (data) => data.map(d => {
 
 const makeTree = (data) => {
 	TREE = {};
-	iter(data)(rule => {
+	iter(data,rule => {
 		const [fst, snd] = rule;
 		if (!TREE[fst]) {
 			TREE[fst] = { children: [], parents: new set() };
@@ -94,9 +94,6 @@ function part2(data) {
 	let s = '';
 	let cnt = 0;
 	while (!pending.empty() || progress.size) {
-		// debug(pending)
-		// debug(progress)
-		// debug(workers)
 		for (let i = 0; i < 5; ++i) {
 			workers[i].dur--;
 			if (workers[i].curr === '.' || workers[i].dur < 0) {
@@ -121,9 +118,6 @@ function part2(data) {
 			}
 		}
 		++cnt;
-		debug(cnt, workers)
-		debug(pending)
-		debug(progress)
 	}
 	debug(s, cnt - 2) // not sure why I go into the loop 2 times
 	console.log("END OF PART2");

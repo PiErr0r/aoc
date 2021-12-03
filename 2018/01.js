@@ -20,9 +20,9 @@ function part1(data) {
 	let res = 0;
 	let s = new set([res]);
 
-	iter(data)(i => {
+	iter(data,(i => {
 		res += eval(i);
-	})
+	}))
 
 	debug(res)
 	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
@@ -37,7 +37,7 @@ function part2(data) {
 	let s = new set([res]);
 	let done = false;
 	while (!done) {
-		iter(data)(i => {
+		iter(data, i => {
 			res += eval(i);
 			if (s.has(res)) {
 				debug(res)

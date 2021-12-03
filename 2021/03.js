@@ -22,7 +22,7 @@ function part1(data) {
 	data = lines(data);
 	let res = empty(data[0].length);
 
-	iter(data)(i => {
+	iter(data,i => {
 		range(i.length)(j => {
 			res[j] += int(i[j]);
 		}) 
@@ -40,7 +40,7 @@ function part1(data) {
 
 const getCnt = (data, pos) => {
 	let res = 0;
-	iter(data)(i => {
+	iter(data,i => {
 		res += i[pos] === '1';
 	});
 

@@ -19,13 +19,13 @@ function part1(data) {
 
 	let cnt2 = 0, cnt3 = 0;
 
-	iter(data)(i => {
+	iter(data,i => {
 		let arr = new Array(26).fill(0);
-		iter(i)(j => {
+		iter(i,j => {
 			arr[ord(j) - ord('a')]++;
 		});
 		let has2 = false, has3 = false;
-		iter(arr)(j => {
+		iter(arr,j => {
 
 			if (j === 2 && !has2) {
 				cnt2++;
@@ -54,7 +54,7 @@ const diff = (a, b) => {
 
 function part2(data) {
 
-	diter(data)((i, j) => {
+	diter(data,(i, j) => {
 		if (i !== j && diff(i,j) === 1) {
 			const s1 = new set(i), s2 = new set(j);
 			debug([...and(s1,s2)].join(''));

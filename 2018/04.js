@@ -35,7 +35,7 @@ function part1(data) {
 	let id, start, end;
 	const guards = {};
 
-	iter(data)(r => {
+	iter(data,r => {
 		const { action, YY, MM, DD, hh, mm } = r;
 		if (action.startsWith('Guard')) {
 			id = action.split(' ')[1].slice(1);

@@ -75,7 +75,7 @@ const dfs = (data, MX, start) => {
 			continue;
 		}
 		let sm = 0;
-		iter(data)(d => {
+		iter(data,d => {
 			sm += manDist(d, [x, y]);
 		});
 		if (sm >= MX) {
