@@ -1,0 +1,127 @@
+
+const fs = require('fs');
+const { exec } = require("child_process");
+const { bin, float, hex, int, num, oct } = require("../lib");
+const { ord, chr, count, debug, disp, randint, gcd, lcm, crt, modPow, mod } = require("../lib");
+const { range, drange, trange, iter, diter, titer } = require("../lib");
+const { empty, PriorityQueue, Queue, set, Stack } = require("../lib");
+const { ints,	floats,	singles,	words,	lines,	table,	groups,	getGroups,	groupsWith,	parse,	parseLine } = require ('../lib');
+const { min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI } = Math;
+const { isSuperset, or, and, xor, sub } = set;
+
+const sort = (arr, fn = (a, b) => a-b) => {
+	arr.sort(fn);
+}
+const in_ = (a, arr) => arr.indexOf(a) !== -1;
+
+const D4 = [[0,1],[1,0],[0,-1],[-1,0]];
+const D8 = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]];
+const MOD = 1e9+7;
+
+const winner = (b) => {
+	let cols = empty(5), rows = empty(5);
+	b.forEach((row, i) => {
+		row.forEach((col, j) => {
+			if (col) {
+				++cols[j];
+				++rows[i];
+			}
+		})
+	});
+	return cols.some(a => a === 5) || rows.some(a => a === 5);
+}
+
+const sumit = (nums, wins) => {
+	let res = 0;
+	wins.forEach((row, i) => {
+		row.forEach((col, j) => {
+			if (!col) {
+				// debug(nums[i][j])
+				res += nums[i][j];	
+			}
+		})
+	});
+	return res;
+}
+
+function part1(data) {
+
+	data = getGroups(data);
+	let nums = ints(data.splice(0, 1)[0]);
+
+	data = data.map(d => lines(d).map(a => ints(a)));
+	let sz = 5;
+	const boards = data.map(a => a.map(b => new Array(sz).fill(0)));
+	let res = 0;
+
+	iter(nums, (i => {
+		iter(data, ((board, j) => {
+			iter(board, (row, k) => {
+				const ind = row.indexOf(i);
+				if (ind !== -1) {
+					boards[j][k][ind] = 1;
+				}
+				if (winner(boards[j]) && !res) {
+					res = i * sumit(board, boards[j]);
+				}
+			})
+			return res;
+		}))
+		return res;
+	}))
+
+	debug(res);
+	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
+	console.log("END OF PART1");
+	return;
+}
+
+function part2(data) {
+
+	data = getGroups(data);
+	let nums = ints(data.splice(0, 1)[0]);
+
+	data = data.map(d => lines(d).map(a => ints(a)));
+	let sz = 5;
+	const boards = data.map(a => a.map(b => new Array(sz).fill(0)));
+	const boardsWon = empty(data.length);
+	let res = 0;
+
+	iter(nums, (i => {
+		iter(data, ((board, j) => {
+			iter(board, (row, k) => {
+				const ind = row.indexOf(i);
+				if (ind !== -1) {
+					boards[j][k][ind] = 1;
+				}
+				if (winner(boards[j]) && !res) {
+					boardsWon[j] = 1;
+				}
+				let cnt = 0;
+				boardsWon.forEach((b, z) => {
+					if (!b) ++cnt;
+				});
+				if (cnt === 0) {
+					res = i * sumit(board, boards[j]);
+				}
+			})
+			return res;
+		}))
+		return res;
+	}))
+
+	debug(res);
+	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
+	console.log("END OF PART2");
+	return;
+}
+
+function main() {
+	let data = fs.readFileSync("04_input").toString("utf-8");
+
+	part1(data);
+	part2(data);
+
+}
+
+main();
