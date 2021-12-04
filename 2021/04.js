@@ -31,7 +31,7 @@ const winner = (b) => {
 	return cols.some(a => a === 5) || rows.some(a => a === 5);
 }
 
-const sumit = (nums, wins) => {
+const sumUnused = (nums, wins) => {
 	let res = 0;
 	wins.forEach((row, i) => {
 		row.forEach((col, j) => {
@@ -62,7 +62,7 @@ function part1(data) {
 					boards[j][k][ind] = 1;
 				}
 				if (winner(boards[j]) && !res) {
-					res = i * sumit(board, boards[j]);
+					res = i * sumUnused(board, boards[j]);
 				}
 			})
 			return res;
@@ -84,25 +84,26 @@ function part2(data) {
 	data = data.map(d => lines(d).map(a => ints(a)));
 	let sz = 5;
 	const boards = data.map(a => a.map(b => new Array(sz).fill(0)));
-	const boardsWon = empty(data.length);
+	const boardsGame = new Set(empty(data.length).map((_, i) => i));
 	let res = 0;
 
 	iter(nums, (i => {
 		iter(data, ((board, j) => {
+			if (!boardsGame.has(j)) return;
 			iter(board, (row, k) => {
 				const ind = row.indexOf(i);
-				if (ind !== -1) {
-					boards[j][k][ind] = 1;
+				if (ind === -1) {
+					return;
 				}
+				boards[j][k][ind] = 1;
+
 				if (winner(boards[j]) && !res) {
-					boardsWon[j] = 1;
+					boardsGame.delete(j);
 				}
-				let cnt = 0;
-				boardsWon.forEach((b, z) => {
-					if (!b) ++cnt;
-				});
-				if (cnt === 0) {
-					res = i * sumit(board, boards[j]);
+				
+				if (boardsGame.size === 0) {
+					res = i * sumUnused(board, boards[j]);
+					return res;
 				}
 			})
 			return res;
