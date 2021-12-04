@@ -19,7 +19,7 @@ const D8 = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]];
 const MOD = 1e9+7;
 
 const winner = (b) => {
-	let cols = empty(5), rows = empty(5);
+	let cols = empty(sz), rows = empty(sz);
 	b.forEach((row, i) => {
 		row.forEach((col, j) => {
 			if (col) {
@@ -28,7 +28,7 @@ const winner = (b) => {
 			}
 		})
 	});
-	return cols.some(a => a === 5) || rows.some(a => a === 5);
+	return cols.some(a => a === sz) || rows.some(a => a === sz);
 }
 
 const sumUnused = (nums, wins) => {
@@ -44,13 +44,15 @@ const sumUnused = (nums, wins) => {
 	return res;
 }
 
+let sz;
+
 function part1(data) {
 
 	data = getGroups(data);
 	let nums = ints(data.splice(0, 1)[0]);
 
 	data = data.map(d => lines(d).map(a => ints(a)));
-	let sz = 5;
+	sz = data[0][0].length;
 	const boards = data.map(a => a.map(b => new Array(sz).fill(0)));
 	let res = 0;
 
@@ -82,7 +84,7 @@ function part2(data) {
 	let nums = ints(data.splice(0, 1)[0]);
 
 	data = data.map(d => lines(d).map(a => ints(a)));
-	let sz = 5;
+	sz = data[0][0].length;
 	const boards = data.map(a => a.map(b => new Array(sz).fill(0)));
 	const boardsGame = new Set(empty(data.length).map((_, i) => i));
 	let res = 0;
@@ -123,6 +125,12 @@ function main() {
 	part1(data);
 	part2(data);
 
+	debug("BIGBOY");
+
+	let dataBB = fs.readFileSync("04_bigboy").toString("utf-8");
+	part1(dataBB);
+	part2(dataBB);
+	process.exit(0);
 }
 
 main();
