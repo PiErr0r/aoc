@@ -13,6 +13,8 @@ def solve(data, part):
 	prev, curr = None, None
 	limit = 2020 if part == 1 else 30000000
 	while i < limit:
+		if i % 1000000 == 0:
+			print(i)
 		if i < len(data):
 			curr = data[i]
 			if prev is not None:
@@ -39,5 +41,5 @@ if __name__ == '__main__':
 
 
 	solve(copy.deepcopy(data), 1)
-	# solve(copy.deepcopy(data), 2)
+	solve(copy.deepcopy(data), 2)
 	
