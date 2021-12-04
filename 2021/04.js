@@ -60,11 +60,13 @@ function part1(data) {
 		iter(data, ((board, j) => {
 			iter(board, (row, k) => {
 				const ind = row.indexOf(i);
-				if (ind !== -1) {
-					boards[j][k][ind] = 1;
+				if (ind === -1) {
+					return;
 				}
+				boards[j][k][ind] = 1;
 				if (winner(boards[j]) && !res) {
 					res = i * sumUnused(board, boards[j]);
+					return res;
 				}
 			})
 			return res;
