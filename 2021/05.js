@@ -31,11 +31,8 @@ function part1(data) {
 		const dx = sign(x2 - x1);
 		const dy = sign(y2 - y1);
 		for (let x = x1, y = y1; x !== (x2 + dx) || y !== (y2 + dy); x += dx, y += dy) {
-			if (!used[getxy(x, y)]) {
-				used[getxy(x, y)] = 1;
-			} else {
-				++used[getxy(x, y)];
-			}			
+			const k = getxy(x, y);
+			used[k] = Number(~~used[k]) + 1;
 		}
 	});
 
@@ -62,11 +59,8 @@ function part2(data) {
 		const dx = sign(x2 - x1);
 		const dy = sign(y2 - y1);
 		for (let x = x1, y = y1; x !== (x2 + dx) || y !== (y2 + dy); x += dx, y += dy) {
-			if (!used[getxy(x, y)]) {
-				used[getxy(x, y)] = 1;
-			} else {
-				++used[getxy(x, y)];
-			}			
+			const k = getxy(x, y);
+			used[k] = Number(~~used[k]) + 1;
 		}
 	});
 
