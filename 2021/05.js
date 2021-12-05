@@ -23,7 +23,7 @@ const getxy = (x, y) => `${x}-${y}`;
 function part1(data) {
 
 	data = parse(data, 'd,d -> d,d');
-	let mxx = 0, mxy = 0
+	let mxx = 0, mxy = 0;
 	iter(data, (row) => {
 		let [x1, y1, x2, y2] = row;
 		mxx = max(mxx, x1, x2);
@@ -31,7 +31,7 @@ function part1(data) {
 	})
 
 	let res = 0;
-	const used = empty(mxy + 1).map(_ => empty(mxx + 1));
+	const used = empty(mxy + 1).map(_ => new Uint8Array(mxx + 1).fill(0));
 	iter(data, (row, cnt) => {
 		let [x1, y1, x2, y2] = row;
 		if (x1 !== x2 && y1 !== y2) return;
@@ -58,7 +58,7 @@ function part2(data) {
 		mxy = max(mxy, y1, y2);
 	})
 
-	const used = empty(mxy + 1).map(_ => empty(mxx + 1));
+	const used = empty(mxy + 1).map(_ => new Uint8Array(mxx + 1).fill(0));
 	let res = 0;
 	iter(data, (row, cnt) => {
 		let [x1, y1, x2, y2] = row;
@@ -77,10 +77,10 @@ function part2(data) {
 }
 
 function main() {
-	let data = fs.readFileSync("05_input").toString("utf-8");
+	// let data = fs.readFileSync("05_input").toString("utf-8");
 
-	part1(data);
-	part2(data);
+	// part1(data);
+	// part2(data);
 
 	debug("BIGBOY");
 
