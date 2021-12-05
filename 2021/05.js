@@ -30,21 +30,33 @@ function part1(data) {
 		mxy = max(mxy, y1, y2);
 	})
 
-	let res = 0;
-	const used = empty(mxy + 1).map(_ => new Uint8Array(mxx + 1).fill(0));
+	let res1 = 0, res2 = 0, is1;
+	const used1 = empty(mxy + 1).map(_ => new Uint8Array(mxx + 1).fill(0));
+	const used2 = empty(mxy + 1).map(_ => new Uint8Array(mxx + 1).fill(0));
 	iter(data, (row, cnt) => {
 		let [x1, y1, x2, y2] = row;
-		if (x1 !== x2 && y1 !== y2) return;
+		// if (x1 !== x2 && y1 !== y2) return;
+		is1 = !(x1 !== x2 && y1 !== y2);
 		const dx = sign(x2 - x1);
 		const dy = sign(y2 - y1);
 		for (let x = x1, y = y1; x !== (x2 + dx) || y !== (y2 + dy); x += dx, y += dy) {
-			res += (++used[y][x] === 2);
+			if (++used2[y][x] === 2) {
+				++res2;
+			}
+			if (is1 && ++used1[y][x] === 2) {
+				++res1;
+				// ++res2;
+			}
+			// res2 += (++used[y][x] === 2);
+			// res1 += !is1 && used[y][x] === 2;
 		}
 	});
 
-	debug(res);
-	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
-	console.log("END OF PART1");
+	debug(res1);
+	// exec(`echo ${res} | xclip -sel clip -rmlastnl`);
+	// console.log("END OF PART1");
+	debug(res2);
+	// console.log("END OF PART2");
 	return;
 }
 
@@ -77,10 +89,11 @@ function part2(data) {
 }
 
 function main() {
-	// let data = fs.readFileSync("05_input").toString("utf-8");
+	let data = fs.readFileSync("05_input").toString("utf-8");
 
-	// part1(data);
+	part1(data);
 	// part2(data);
+	// process.exit(0)
 
 	debug("BIGBOY");
 
@@ -89,7 +102,7 @@ function main() {
 		let dataBB = fs.readFileSync("05_bigboy_" + i).toString("utf-8");
 
 		part1(dataBB);
-		part2(dataBB);
+		// part2(dataBB);
 		console.timeEnd("BB"+i)
 	}
 
