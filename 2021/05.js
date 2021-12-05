@@ -30,6 +30,7 @@ function part1(data) {
 		mxy = max(mxy, y1, y2);
 	})
 
+	let res = 0;
 	const used = empty(mxy + 1).map(_ => empty(mxx + 1));
 	iter(data, (row, cnt) => {
 		let [x1, y1, x2, y2] = row;
@@ -37,17 +38,9 @@ function part1(data) {
 		const dx = sign(x2 - x1);
 		const dy = sign(y2 - y1);
 		for (let x = x1, y = y1; x !== (x2 + dx) || y !== (y2 + dy); x += dx, y += dy) {
-			++used[y][x];
+			res += (++used[y][x] === 2);
 		}
 	});
-
-	let res = 0;
-	iter(used, row => {
-		iter(row, col => {
-			if (col > 1)
-				++res;
-		})
-	})
 
 	debug(res);
 	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
@@ -66,23 +59,16 @@ function part2(data) {
 	})
 
 	const used = empty(mxy + 1).map(_ => empty(mxx + 1));
+	let res = 0;
 	iter(data, (row, cnt) => {
 		let [x1, y1, x2, y2] = row;
 		
 		const dx = sign(x2 - x1);
 		const dy = sign(y2 - y1);
 		for (let x = x1, y = y1; x !== (x2 + dx) || y !== (y2 + dy); x += dx, y += dy) {
-			++used[y][x];
+			res += (++used[y][x] === 2);
 		}
 	});
-
-	let res = 0;
-	iter(used, row => {
-		iter(row, col => {
-			if (col > 1)
-				++res;
-		})
-	})
 
 	debug(res);
 	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
@@ -98,10 +84,15 @@ function main() {
 
 	debug("BIGBOY");
 
-	let dataBB = fs.readFileSync("05_bigboy").toString("utf-8");
+	for (let i = 1; i <= 2; ++i) {
+		console.time("BB"+i)
+		let dataBB = fs.readFileSync("05_bigboy_" + i).toString("utf-8");
 
-	part1(dataBB);
-	part2(dataBB);
+		part1(dataBB);
+		part2(dataBB);
+		console.timeEnd("BB"+i)
+	}
+
 
 	process.exit(0)
 }
