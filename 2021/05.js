@@ -23,25 +23,31 @@ const getxy = (x, y) => `${x}-${y}`;
 function part1(data) {
 
 	data = parse(data, 'd,d -> d,d');
-	const used = {};
-	iter(data, row => {
+	let mxx = 0, mxy = 0
+	iter(data, (row) => {
+		let [x1, y1, x2, y2] = row;
+		mxx = max(mxx, x1, x2);
+		mxy = max(mxy, y1, y2);
+	})
+
+	const used = empty(mxy + 1).map(_ => empty(mxx + 1));
+	iter(data, (row, cnt) => {
 		let [x1, y1, x2, y2] = row;
 		if (x1 !== x2 && y1 !== y2) return;
-
 		const dx = sign(x2 - x1);
 		const dy = sign(y2 - y1);
 		for (let x = x1, y = y1; x !== (x2 + dx) || y !== (y2 + dy); x += dx, y += dy) {
-			const k = getxy(x, y);
-			used[k] = Number(~~used[k]) + 1;
+			++used[y][x];
 		}
 	});
 
 	let res = 0;
-	for (let k in used) {
-		if (used[k] > 1) {
-			++res;
-		}
-	}
+	iter(used, row => {
+		iter(row, col => {
+			if (col > 1)
+				++res;
+		})
+	})
 
 	debug(res);
 	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
@@ -52,24 +58,31 @@ function part1(data) {
 function part2(data) {
 
 	data = parse(data, 'd,d -> d,d');
-	const used = {};
-	iter(data, row => {
+	let mxx = 0, mxy = 0
+	iter(data, (row) => {
+		let [x1, y1, x2, y2] = row;
+		mxx = max(mxx, x1, x2);
+		mxy = max(mxy, y1, y2);
+	})
+
+	const used = empty(mxy + 1).map(_ => empty(mxx + 1));
+	iter(data, (row, cnt) => {
 		let [x1, y1, x2, y2] = row;
 		
 		const dx = sign(x2 - x1);
 		const dy = sign(y2 - y1);
 		for (let x = x1, y = y1; x !== (x2 + dx) || y !== (y2 + dy); x += dx, y += dy) {
-			const k = getxy(x, y);
-			used[k] = Number(~~used[k]) + 1;
+			++used[y][x];
 		}
 	});
 
 	let res = 0;
-	for (let k in used) {
-		if (used[k] > 1) {
-			++res;
-		}
-	}
+	iter(used, row => {
+		iter(row, col => {
+			if (col > 1)
+				++res;
+		})
+	})
 
 	debug(res);
 	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
@@ -82,6 +95,14 @@ function main() {
 
 	part1(data);
 	part2(data);
+
+	debug("BIGBOY");
+
+	let dataBB = fs.readFileSync("05_bigboy").toString("utf-8");
+
+	part1(dataBB);
+	part2(dataBB);
+
 	process.exit(0)
 }
 
