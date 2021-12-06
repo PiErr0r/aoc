@@ -35,7 +35,6 @@ function part1(data) {
 	const used2 = empty(mxy + 1).map(_ => new Uint8Array(mxx + 1).fill(0));
 	iter(data, (row, cnt) => {
 		let [x1, y1, x2, y2] = row;
-		// if (x1 !== x2 && y1 !== y2) return;
 		is1 = !(x1 !== x2 && y1 !== y2);
 		const dx = sign(x2 - x1);
 		const dy = sign(y2 - y1);
@@ -45,10 +44,7 @@ function part1(data) {
 			}
 			if (is1 && ++used1[y][x] === 2) {
 				++res1;
-				// ++res2;
 			}
-			// res2 += (++used[y][x] === 2);
-			// res1 += !is1 && used[y][x] === 2;
 		}
 	});
 
