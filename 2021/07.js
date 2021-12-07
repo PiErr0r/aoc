@@ -72,10 +72,12 @@ function part2(data) {
 	let mean = floor((sum(data) + 1) / data.length);
 	debug(mean);
 	// binary search w/ gradient descent solution
-	const m = binSearch(data, mn, mx, bsFn);
-	console.assert(m === mean);
+	// const m = binSearch(data, mn, mx, bsFn);
+	// if (m !== mean)
+	// 	debug(m, mean)
+	// console.assert(m === mean);
 	
-	let res = bsFn(m, data);
+	let res = bsFn(mean, data);
 	debug(res);
 	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART2");
