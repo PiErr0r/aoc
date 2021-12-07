@@ -48,18 +48,16 @@ function part1(data) {
 function part2(data) {
 
 	data = ints(data);
-	// const F = new Array(9).fill(0);
-	const F = new Array(9).fill(0n);
+	const F = new Array(9).fill(0);
 	iter(data, i => {
 		++F[i];
 	});
 
-	let res = BigInt(data.length);
+	let res = data.length;
 	range(256)(i => {
-		if (i % 100000 === 0) debug(i)
-		// if (i === 80) {
-		// 	debug(res);
-		// }
+		if (i === 80) {
+			debug(res);
+		}
 		const Z = F[0];
 		range(8)(j => {
 			F[j] = F[j+1];
@@ -70,15 +68,13 @@ function part2(data) {
 	});
 
 	debug(res);
-	// exec(`echo ${res} | xclip -sel clip -rmlastnl`);
-	// console.log("END OF PART2");
 	return;
 }
 
 function main() {
 	let data = fs.readFileSync("06_input").toString("utf-8");
 
-	part1(data);
+	// part1(data);
 	part2(data);
 	process.exit(0);
 }

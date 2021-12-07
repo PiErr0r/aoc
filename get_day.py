@@ -96,7 +96,7 @@ function main() {{
 
 	part1(data);
 	part2(data);
-
+	process.exit(0);
 }}
 
 main();
