@@ -99,9 +99,10 @@ function part2(data, basins) {
 }
 
 function main() {
-	// let data = fs.readFileSync("09_input").toString("utf-8").trim();
-	// let data = fs.readFileSync("09_bigboy").toString("utf-8").trim();
-	let data = fs.readFileSync("09_bb_2").toString("utf-8");
+	let data = fs.readFileSync("09_input").toString("utf-8").trim();
+	// let data = fs.readFileSync("09_bigboy_1").toString("utf-8").trim();
+	// let data = fs.readFileSync("09_bigboy_2").toString("utf-8").trim();
+	// let data = fs.readFileSync("09_bigboy_3").toString("utf-8").trim();
 
 	part1(data);
 	process.exit(0);
