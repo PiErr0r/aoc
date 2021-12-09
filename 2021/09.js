@@ -17,7 +17,7 @@ const D4 = [[0,1],[1,0],[0,-1],[-1,0]];
 const D8 = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]];
 const MOD = 1e9+7;
 
-const is_small = (data, i, j) => {
+const isSmall = (data, i, j) => {
 	let res = true;
 	// debug(data[0])
 	let x, y;
@@ -36,39 +36,46 @@ function part1(data) {
 	data = lines(data).map(a => a.split('').map(b => int(b)));
 	let res = 0;
 	const basins = [];
-	iter(data, (row, i) => {
-		iter(row, (c, j) => {
-			if (is_small(data, i, j)) {
-				res += c + 1;
-				basins.push([i, j]);
+	for (let i = 0; i < data.length; ++i) {
+		for (let j = 0; j < data[0].length; ++j) {
+			if (data[i][j] === 9) continue;
+			if (isSmall(data, i, j)) {
+				res += data[i][j] + 1;
+				basins.push([i,j]);
 			}
-		})
-	});
+		}
+	}
 
 	debug(res);
-	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
-	console.log("END OF PART1");
+	// exec(`echo ${res} | xclip -sel clip -rmlastnl`);
+	// console.log("END OF PART1");
 	part2(data, basins);
 	return;
 }
 
 const dfs = (data, i, j) => {
-	const q = new Queue();
-	q.push([i, j]);
+	const q = [[i, j]];
+	let ii = 0;
 	let cnt = 0, nx, ny;
-	while (q.size()) {
-		const [x, y] = q.pop();
-		if (data[y][x] >= 9) {
+	while (ii < q.length) {
+		const [x, y] = q[ii];
+		if (data[y][x] === 9) {
+			++ii;
 			continue;
 		} 
-		++cnt;
 		for (let d of D4) {
 			const [dx, dy] = d;
 			ny = y + dy;
 			nx = x + dx;
-			if (!inBB(ny, nx, data)) continue;
-			q.push([nx, ny]);
+			if (!inBB(ny, nx, data)) {
+				++ii;
+				continue;
+			}
+			if (data[ny][nx] !== 9)
+				q.push([nx, ny]);
 		}
+		++cnt;
+		++ii;
 		data[y][x] = 9;
 	}
 	return cnt;
@@ -76,28 +83,27 @@ const dfs = (data, i, j) => {
 
 function part2(data, basins) {
 
-	let res = 1;
-
-	let fill = 10;
-	const sizes = empty(3);
-	iter(basins, b => {
-		let sz = dfs(data, b[1], b[0]);
-		const mn = min(...sizes);
+	const S = [0,0,0];
+	for (let i = 0; i < basins.length; ++i) {
+		let sz = dfs(data, basins[i][1], basins[i][0]);  
+		const mn = min(...S);
 		if (sz > mn) {
-			const i = sizes.indexOf(mn);
-			sizes[i] = sz;
+			const ind = S.indexOf(mn);
+			S[ind] = sz;
 		}
-	})
-	res = BigInt(sizes[0]) * BigInt(sizes[1]) * BigInt(sizes[2]);
+	}
+	const res = BigInt(S[0]) * BigInt(S[1]) * BigInt(S[2]);
 
 	debug(res);
-	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
-	console.log("END OF PART2");
+	// exec(`echo ${res} | xclip -sel clip -rmlastnl`);
+	// console.log("END OF PART2");
 	return;
 }
 
 function main() {
-	let data = fs.readFileSync("09_input").toString("utf-8");
+	// let data = fs.readFileSync("09_input").toString("utf-8").trim();
+	let data = fs.readFileSync("09_bigboy").toString("utf-8").trim();
+	// let data = fs.readFileSync("09_bigboy_2").toString("utf-8").trim();
 
 	part1(data);
 	process.exit(0);
