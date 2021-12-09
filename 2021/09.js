@@ -88,7 +88,7 @@ function part2(data, basins) {
 			sizes[i] = sz;
 		}
 	})
-	res = sizes[0] * sizes[1] * sizes[2];
+	res = BigInt(sizes[0]) * BigInt(sizes[1]) * BigInt(sizes[2]);
 
 	debug(res);
 	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
