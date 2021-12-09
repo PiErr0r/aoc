@@ -53,7 +53,7 @@ function part1(data) {
 	return;
 }
 
-const dfs = (data, i, j) => {
+const bfs = (data, i, j) => {
 	const q = [[i, j]];
 	let ii = 0;
 	let cnt = 0, nx, ny;
@@ -67,10 +67,8 @@ const dfs = (data, i, j) => {
 			const [dx, dy] = d;
 			ny = y + dy;
 			nx = x + dx;
-			if (!inBB(ny, nx, data)) {
-				++ii;
-				continue;
-			}
+			if (!inBB(ny, nx, data)) continue;
+
 			if (data[ny][nx] !== 9)
 				q.push([nx, ny]);
 		}
@@ -85,7 +83,7 @@ function part2(data, basins) {
 
 	const S = [0,0,0];
 	for (let i = 0; i < basins.length; ++i) {
-		let sz = dfs(data, basins[i][1], basins[i][0]);  
+		let sz = bfs(data, basins[i][1], basins[i][0]);  
 		const mn = min(...S);
 		if (sz > mn) {
 			const ind = S.indexOf(mn);
@@ -102,8 +100,8 @@ function part2(data, basins) {
 
 function main() {
 	// let data = fs.readFileSync("09_input").toString("utf-8").trim();
-	let data = fs.readFileSync("09_bigboy").toString("utf-8").trim();
-	// let data = fs.readFileSync("09_bigboy_2").toString("utf-8").trim();
+	// let data = fs.readFileSync("09_bigboy").toString("utf-8").trim();
+	let data = fs.readFileSync("09_bb_2").toString("utf-8");
 
 	part1(data);
 	process.exit(0);
