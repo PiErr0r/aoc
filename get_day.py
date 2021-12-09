@@ -62,10 +62,9 @@ const {{ ints,	floats,	singles,	words,	lines,	table,	groups,	getGroups,	groupsWi
 const {{ min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI }} = Math;
 const {{ isSuperset, or, and, xor, sub }} = set;
 
-const sort = (arr, fn = (a, b) => a-b) => {{
-	arr.sort(fn);
-}}
+const sort = (arr, fn = (a, b) => a-b) => arr.sort(fn);
 const in_ = (a, arr) => arr.indexOf(a) !== -1;
+const inBB = (row, col, data) => 0 <= row && row < data.length && 0 <= col && col < data[0].length;
 
 const D4 = [[0,1],[1,0],[0,-1],[-1,0]];
 const D8 = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]];
