@@ -17,121 +17,69 @@ const D4 = [[0,1],[1,0],[0,-1],[-1,0]];
 const D8 = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]];
 const MOD = 1e9+7;
 
+const O = {
+	'(': ')',
+	'[': ']',
+	'{': '}',
+	'<': '>',
+};
+
+const score = {
+  ')': [3, 1],
+  ']': [57, 2],
+  '}': [1197, 3],
+  '>': [25137, 4],
+}
+
 function part1(data) {
 
 	data = lines(data);
-	let score = {
-    ')': [0, 3],
-    ']': [1, 57],
-    '}': [2, 1197],
-    '>': [3, 25137],
-    '(': [0, -1],
-    '[': [1, -1],
-    '{': [2, -1],
-    '<': [3, -1],
-	}
-
-	const findStart = (r, i) => {
-		let close = Object.keys(score);
-		const ind = close.indexOf(r[i]);
-		close = close[ind + 4];
-		const cnt = empty(4);
-		while (i >= 0) {
-			const [j, s] = score[ r[i] ];
-			if (s === -1) {
-				--cnt[j];
-				if (r[i] === close && cnt[j] === 0) {
-					return i;
-				}
-			} else {
-				++cnt[j];
-			}
-			--i;
-		}
-		return 0;
-	}
-
+	const S = new Stack();
 	let res = 0;
-	const corr = [];
-	iter(data, (row, k) => {
-		let cnt = empty(4)
-		iter(row, (j, l) => {
-			const [ i, s ] = score[j];
-			if (s === -1) {
-				cnt[i]++
-			} else {
-				--cnt[i];
-					const start = findStart(row, l, j);
-					const nem = empty(4);
-					iter(row.slice(start, l + 1), col => {
-						const [nj, ns] = score[col];
-						if (ns === -1) {
-							++nem[nj];
-						} else {
-							--nem[nj];
-						}
-					});
-					if (!nem.every(a => a === 0)) {
-						res += s;
-						corr.push(k);
-						return 1;
-					}
+	const corr = new Set();
+	iter(data, (row, i) => {
+		iter(row, c => {
+			if (O[c]) {
+				S.push(O[c]);
+			} else if (c !== S.pop()) {
+				corr.add(i);
+				res += score[c][0];
+				return true;
 			}
 		})
 	})
+
 	debug(res);
 	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART1");
 	part2(data, corr)
+	// part2xx(data, corr)
 	return;
 }
 
 function part2(data, corr) {
 
-	data = data.filter((_, i) => corr.indexOf(i) === -1);
-	debug(data.length)
-	let score = {
-    ')': [0, 1],
-    ']': [1, 2],
-    '}': [2, 3],
-    '>': [3, 4],
-    '(': [0, -1],
-    '[': [1, -1],
-    '{': [2, -1],
-    '<': [3, -1],
-	}
-
-	const st = new Stack();
-	let tmp = 0;
-	const results = [];
+	data = data.filter((_, i) => !corr.has(i));
+	let res = 0, results = [];
+	const S = new Stack();
 	iter(data, row => {
-		iter(row, l => {
-			const [i, s] = score[l];
-			if (s === -1) {
-				st.push(l);
+		iter(row, c => {
+			if (O[c]) {
+				S.push(O[c]);
 			} else {
-				st.pop();
+				console.assert(S.pop() === c);
 			}
-		});
-		tmp = 0;
-		let S = '';
-		while (!st.empty()) {
-			const curr = st.pop();
-			let close = Object.keys(score);
-			const ind = close.indexOf(curr);
-			close = close[ind - 4];
-			S += close;
-			const [_, s] = score[close];
-			tmp = tmp * 5 + s;
+		})
+		res = 0;
+		while (!S.empty()) {
+			let c = S.pop();
+			res = 5 * res + score[c][1];
 		}
-		results.push(tmp);
+		results.push(res);
 	})
-	sort(results);
-	let res = results[floor(results.length / 2)]
-
-	// let res;
-
-	debug(res, results.length / 2);
+	sort(results)
+	res = results[floor(results.length / 2)]
+	debug(res);
 	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART2");
 	return;
