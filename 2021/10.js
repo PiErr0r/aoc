@@ -60,7 +60,7 @@ function part1(data) {
 function part2(data, corr) {
 
 	data = data.filter((_, i) => !corr.has(i));
-	let res = 0, results = [];
+	let res = 0n, results = [];
 	const S = new Stack();
 	iter(data, row => {
 		iter(row, c => {
@@ -70,14 +70,15 @@ function part2(data, corr) {
 				console.assert(S.pop() === c);
 			}
 		})
-		res = 0;
+		res = 0n;
 		while (!S.empty()) {
 			let c = S.pop();
-			res = 5 * res + score[c][1];
+			res = 5n * res + BigInt(score[c][1]);
 		}
 		results.push(res);
 	})
-	sort(results)
+	let c;
+	results.sort((a, b) => ((c = BigInt(a) - BigInt(b)) > 0n ? 1 : c < 0n ? -1 : 0 ))
 	res = results[floor(results.length / 2)]
 	debug(res);
 	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
@@ -86,7 +87,8 @@ function part2(data, corr) {
 }
 
 function main() {
-	let data = fs.readFileSync("10_input").toString("utf-8");
+	// let data = fs.readFileSync("10_input").toString("utf-8");
+	let data = fs.readFileSync("10_bigboy").toString("utf-8");
 
 	part1(data);
 	// part2(data);
