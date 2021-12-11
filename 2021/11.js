@@ -21,8 +21,10 @@ function part1(data) {
  	// 7:12 (20)
 	data = lines(data).map(r => ints((r.split('').join(','))));
 	let res = 0;
-	const q = new Queue();
+
 	range(100)(i => {
+		const q = [];
+		let ii = 0;
 		for (let i = 0; i < data.length; ++i) {
 			for (let j = 0; j < data[0].length; ++j) {
 				++data[i][j];
@@ -32,8 +34,9 @@ function part1(data) {
 			}
 		}
 
-		while (!q.empty()) {
-			const [y, x] = q.pop();
+		while (ii < q.length) {
+			const [y, x] = q[ii];
+			++ii;
 			++res;
 			data[y][x] = 0;
 			iter(D8, d => {
@@ -67,19 +70,23 @@ function part2(data) {
 	let cnt = 0;
 	let flashes = 0;
 	while (true) {
+		const q = [];
+		let ii = 0;
+
 		flashes = 0;
 		for (let i = 0; i < data.length; ++i) {
 			for (let j = 0; j < data[0].length; ++j) {
 				++data[i][j];
 				if (data[i][j] > 9) {
-					q.push([i, j]);
 					++flashes;
+					q.push([i, j]);
 				}
 			}
 		}
 
-		while (!q.empty()) {
-			const [y, x] = q.pop();
+		while (ii < q.length) {
+			const [y, x] = q[ii];
+			++ii;
 			++res;
 			data[y][x] = 0;
 			iter(D8, d => {
@@ -113,7 +120,8 @@ function part2(data) {
 }
 
 function main() {
-	let data = fs.readFileSync("11_input").toString("utf-8");
+	// let data = fs.readFileSync("11_input").toString("utf-8");
+	let data = fs.readFileSync("11_bigboy").toString("utf-8");
 
 	part1(data);
 	part2(data);
