@@ -5,7 +5,7 @@ const { bin, float, hex, int, num, oct } = require("../lib");
 const { ord, chr, count, debug, disp, randint, gcd, lcm, crt, modPow, mod } = require("../lib");
 const { range, drange, trange, iter, diter, titer } = require("../lib");
 const { empty, PriorityQueue, Queue, set, Stack } = require("../lib");
-const { ints,	floats,	singles,	words,	lines,	table,	groups,	getGroups,	groupsWith,	parse,	parseLine, copy } = require ('../lib');
+const { digits, ints,	floats,	singles,	words,	lines,	table,	groups,	getGroups,	groupsWith,	parse,	parseLine, copy } = require ('../lib');
 const { min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI } = Math;
 const { isSuperset, or, and, xor, sub } = set;
 
@@ -64,7 +64,7 @@ function part1(data) {
 
 function part2(data) {
 	// 07:26 (14 min [34 min total])
-	data = lines(data).map(r => ints((r.split('').join(','))));
+	data = lines(data).map(r => digits(r));
 	let res = 0;
 	let cnt = 0;
 	let flashes = 0;
@@ -131,8 +131,8 @@ function part2(data) {
 }
 
 function main() {
-	// let data = fs.readFileSync("11_input").toString("utf-8");
-	let data = fs.readFileSync("11_bigboy").toString("utf-8");
+	let data = fs.readFileSync("11_input").toString("utf-8");
+	// let data = fs.readFileSync("11_bigboy").toString("utf-8");
 
 	// part1(data);
 	part2(data);
