@@ -66,11 +66,17 @@ function part2(data) {
 	// 07:26 (14 min [34 min total])
 	data = lines(data).map(r => ints((r.split('').join(','))));
 	let res = 0;
-	const q = new Queue();
 	let cnt = 0;
 	let flashes = 0;
+	// const q = new Array(300000);
+	let q = [];
 	while (true) {
-		const q = [];
+		// q = [];
+		if (cnt === 100) {
+			debug(res);
+			console.log("END OF PART1");
+		}
+		// const q = [];
 		let ii = 0;
 
 		flashes = 0;
@@ -79,14 +85,19 @@ function part2(data) {
 				++data[i][j];
 				if (data[i][j] > 9) {
 					++flashes;
-					q.push([i, j]);
+					// hack to use instead of q.push() becase array is actually object
+					// even length is updated
+					q[ii++] = [i, j];
 				}
 			}
 		}
+		let mx = ii;
+		ii = 0;
 
-		while (ii < q.length) {
+		while (ii < mx/*q.length*/) {
 			const [y, x] = q[ii];
 			++ii;
+			if (data[y][x] === 0) continue;
 			++res;
 			data[y][x] = 0;
 			iter(D8, d => {
@@ -100,7 +111,7 @@ function part2(data) {
 					++data[ny][nx];
 					if (data[ny][nx] > 9) {
 						++flashes;
-						q.push([ny, nx]);
+						q[mx++] = [ny, nx]
 					}
 				}
 			})
@@ -123,7 +134,7 @@ function main() {
 	// let data = fs.readFileSync("11_input").toString("utf-8");
 	let data = fs.readFileSync("11_bigboy").toString("utf-8");
 
-	part1(data);
+	// part1(data);
 	part2(data);
 	process.exit(0);
 }
