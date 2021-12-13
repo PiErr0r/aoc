@@ -23,11 +23,9 @@ So, the above cave
 system looks roughly like this:
     start
     /   \
-c
-
---A-----b--d
+c--A-----b--d
    \   /
-     end
+    end
 
 Your goal is to find the number of distinct paths 
 that start at start, end at end, and don't visit 

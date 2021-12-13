@@ -29,7 +29,10 @@ const dfs = (G, node, is2) => {
 
 	iter(G[node].children, cave => {
 		if (cave === 'start') return;
-		if (G[cave].isSmall && (is2 && G[cave].visited < 2 && !smallTwice || !G[cave].visited) || !G[cave].isSmall) {
+		// && (is2 && G[cave].visited < 2 && !smallTwice || !G[cave].visited) 
+		if (	G[cave].isSmall 
+			&& (G[cave].visited < 2 - (!is2 || smallTwice)) 
+			|| !G[cave].isSmall) {
 			didGo = true;
 			G[cave].visited++;
 			if (is2 && G[cave].isSmall && G[cave].visited === 2) {
