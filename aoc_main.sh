@@ -6,4 +6,5 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
+# echo https://adventofcode.com/`date +"%Y %e"`;
 ./get_day.py `date +"%Y %e"` $1; subl `date +"%Y"`/`date +"%d"`*
