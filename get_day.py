@@ -55,20 +55,13 @@ program_text_js = """
 const fs = require('fs');
 const {{ exec }} = require("child_process");
 const {{ bin, float, hex, int, num, oct }} = require("../lib");
-const {{ ord, chr, count, debug, disp, crt, gcd, lcm, modPow, mod, prod, prodBig, randint, sum, sumBig, transpose }} = require("../lib");
 const {{ range, drange, trange, iter, diter, titer }} = require("../lib");
+const {{ copy,	entries, in_, inBB, keys, sort, values }} = require("../lib");
+const {{ ord, chr, count, debug, disp, crt, gcd, lcm, modPow, mod, prod, prodBig, randint, sum, sumBig, transpose }} = require("../lib");
 const {{ Counter, DD, empty, PriorityQueue, Queue, set, Stack }} = require("../lib");
-const {{ digits, ints,	floats,	singles,	words,	lines,	table,	groups,	getGroups,	groupsWith,	parse,	parseLine, copy }} = require ('../lib');
+const {{ digits, ints,	floats,	singles,	words,	lines,	table,	groups,	getGroups,	groupsWith,	parse,	parseLine }} = require ('../lib');
 const {{ min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI }} = Math;
 const {{ isSuperset, or, and, xor, sub }} = set;
-
-const sort = (arr, fn = (a, b) => a-b) => arr.sort(fn);
-const in_ = (a, arr) => arr.indexOf(a) !== -1;
-const inBB = (row, col, data) => 0 <= row && row < data.length && 0 <= col && col < data[0].length;
-
-const D4 = [[0,1],[1,0],[0,-1],[-1,0]];
-const D8 = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]];
-const MOD = 1e9+7;
 
 function part1(data) {{
 
