@@ -62,6 +62,7 @@ const {{ ord, chr, count, debug, disp, crt, gcd, lcm, modPow, mod, prod, prodBig
 const {{ digits, ints,	floats,	singles,	words,	lines,	table,	groups,	getGroups,	groupsWith,	parse,	parseLine }} = require ('../lib');
 const {{ min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI }} = Math;
 const {{ isSuperset, or, and, xor, sub }} = set;
+// const {{ parsePacket, ops, HEX }} = require('./lib_2021'); // specific to AOC 2021
 
 function part1(data) {{
 
