@@ -41,7 +41,7 @@ function part1(data) {
 function part2(data, part) {
 
 	let res;
-	data = lines(data).map(l => l.split('').map(a => int(a)));
+	data = lines(data).map(digits);
 	const mul = part === 1 ? 1 : 5;
 	const f = data.length, s = data[0].length;
 	const fm = f * mul, sm = s * mul;
