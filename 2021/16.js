@@ -13,10 +13,6 @@ const { HEX, ops, parsePacket } = require('./lib_2021');
 
 function part1(data) {
 
-	let asd = '04005AC33890';
-	let tmp = asd.split('').map(a => HEX[a]).join('');
-	debug(tmp)
-
 	let bits = data.split('').map(a => HEX[a]).join('');
 	let res = 0;
 	while (bits.length) {
