@@ -12,12 +12,17 @@ const { isSuperset, or, and, xor, sub } = set;
 // const { parsePacket, ops, HEX } = require('./lib_2021'); // specific to AOC 2021
 
 // const AREA = [[96,125], [-144,-98]];
-const AREA = [[2000, 2039], [-9960, -9956]];
+// const AREA = [[2000, 2039], [-9960, -9956]];
 // 49595820 
 // 336 
 // const AREA = [[22000, 22045], [-99960, -99956]];
 // 4995950820 
 // 391 
+// const AREA = [[117,7310],[-9546,-89]];
+// 45558285 
+// 69665558 
+const AREA = [[352,377],[-49,-30]]
+// wrong solutions ?
 
 const simulate = (vx, vy) => {
 	let px = 0, py = 0, wasIn = false;
