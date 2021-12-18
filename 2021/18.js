@@ -88,29 +88,27 @@ const magnitude = (n) => {
 
 const addNums = (a, b) => {
 	let curr = [a, b];
-	let didExplode = false, didSplit = false, couldExplode = false;
+	let repeat;
 	do {
-		couldExplode = false;
-		do {
-			didExplode = false;
-			const toExplode = findExplode(curr);
-			if (toExplode.length >= 4) {
-				explode(curr, toExplode);
-				didExplode = true;
-			}
-		} while (didExplode);
+		repeat = false;
+		const toExplode = findExplode(curr);
+		if (toExplode.length >= 4) {
+			explode(curr, toExplode);
+			repeat = true;
+			continue;
+		}
 		const [found, toSplit] = findSplit(curr);
 		if (found) {
 			split(curr, toSplit);
-			couldExplode = true
+			repeat = true
 		}
-	} while (couldExplode);
+	} while (repeat);
 	return curr;
 }
 
 function part1(data) {
 
-	data = lines(data).map(l => eval(l))
+	data = lines(data).map(l => JSON.parse(l))
 	let res;
 
 	let curr = data[0], i = 0;
@@ -129,7 +127,7 @@ function part1(data) {
 const cpy = (s) => JSON.parse(JSON.stringify(s));
 
 function part2(data) {
-	data = lines(data).map(l => eval(l));
+	data = lines(data).map(l => JSON.parse(l));
 	let res = 0;
 	diter(data,(a, b, i, j) => {
 		if (i === j) return;
