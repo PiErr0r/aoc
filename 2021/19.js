@@ -77,6 +77,9 @@ const mandist = (a, b) => {
 
 function part1(data) {
 
+	// TODO
+	// learn about ICP algorithms and optimize this thing
+
 	data = getGroups(data)
 		.map(g => lines(g)
 			.map((r, i) => i ? ints(r) : null)
@@ -88,10 +91,10 @@ function part1(data) {
 	let i = 0;
 	while (!scanners.every(a => a)) {
 		i = (i + 1) % scanners.length;
-		debug("START", i);
 		if (scanners[i]) continue;
+		debug("START", i);
 		const perms = permute(data[i]);
-		perms.forEach(p => {
+		iter(perms, p => {
 			if (scanners[i]) return;
 			const [match, coords] = tryMatch(beacons, p);
 			if (match) {

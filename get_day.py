@@ -62,6 +62,7 @@ const {{ ord, chr, count, debug, disp, crt, gcd, lcm, modPow, mod, prod, prodBig
 const {{ digits, ints,	floats,	singles,	words,	lines,	table,	groups,	getGroups,	groupsWith,	parse,	parseLine }} = require ('../lib');
 const {{ min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI }} = Math;
 const {{ isSuperset, or, and, xor, sub }} = set;
+const {{ getExecStr }} = require("../lib/post");
 // const {{ parsePacket, ops, HEX }} = require('./lib_2021'); // specific to AOC 2021
 
 function part1(data) {{
@@ -70,6 +71,9 @@ function part1(data) {{
 
 	debug(res);
 	exec(`echo ${{res}} | xclip -sel clip -rmlastnl`);
+	if (res) {{
+		exec(getExecStr({1}, {0}, 1, res));
+	}}
 	console.log("END OF PART1");
 	return;
 }}
@@ -80,6 +84,9 @@ function part2(data) {{
 
 	debug(res);
 	// exec(`echo ${{res}} | xclip -sel clip -rmlastnl`);
+	// if (res) {{
+	// 	exec(getExecStr({1}, {0}, 2, res));
+	// }}
 	console.log("END OF PART2");
 	return;
 }}
