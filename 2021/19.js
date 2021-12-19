@@ -97,8 +97,9 @@ function part1(data) {
 			if (match) {
 				scanners[i] = coords;
 				data[i] = copy(p);
-				debug(coords)
+				debug(scanners.reduce((a, c) => a += c ? 1 : 0, 0), coords)
 				addBeacons(beacons, p, coords);
+				return true;
 			}
 		});
 	}
@@ -107,8 +108,8 @@ function part1(data) {
 	let res2 = 0;
 	diter(scanners, (a, b) => {
 		const m = mandist(a, b);
-		if (m > res) {
-			res = m;
+		if (m > res2) {
+			res2 = m;
 		}
 	})
 
