@@ -45,6 +45,8 @@ def sub_mol(molecule, atoms):
 	return list(set(ret))
 
 def sub_mol_2(repls, molecule):
+	# TODO:
+	# implement using Levenhstein distance since this isn't correct for general input
 	copy_mol = molecule
 	steps = 0
 	
