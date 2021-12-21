@@ -107,7 +107,7 @@ function main() {
 	part1(data, 1);
 	part1(data, 2);
 	// part2(data);
-	// process.exit(0);
+	process.exit(0);
 }
 
 main();
