@@ -17,7 +17,7 @@ function part1(data) {
 	data = parse(data, 'w x=d..d,y=d..d,z=d..d');
 	// debug(data)
 
-	let cube = empty(100).map(a => empty(100).map(b => empty(100)));
+	let cube = empty(101, 101, 101);
 	let res = 0;
 	iter(data, r => {
 		const [on, x1, x2, y1, y2, z1, z2] = r;
@@ -56,7 +56,7 @@ const inInt1D = (t1, t21, t22) => t12 <= t1 && t1 <= t22
 
 const isIn = (a, b) => {
 	const [on, x1, x2, y1, y2, z1, z2] = a;
-	const [on, _x1, _x2, _y1, _y2, _z1, _z2] = b;
+	const [_on, _x1, _x2, _y1, _y2, _z1, _z2] = b;
 	return inInt(x1, x2, _x1, _x2) 
 	&& inInt(y1, y2, _y1, _y2) 
 	&& inInt(z1, z2, _z1, _z2);
@@ -64,7 +64,7 @@ const isIn = (a, b) => {
 
 const fullyIn = (c1, c2) => {
 	const [on, x1, x2, y1, y2, z1, z2] = c1;
-	const [on, _x1, _x2, _y1, _y2, _z1, _z2] = c2;
+	const [_on, _x1, _x2, _y1, _y2, _z1, _z2] = c2;
 
 	return inInt1D(x1, _x1, _x2)
 		&& inInt1D(x2, _x1, _x2)
@@ -76,7 +76,7 @@ const fullyIn = (c1, c2) => {
 
 const getCubes = (c1, c2) => {
 	const [on, x1, x2, y1, y2, z1, z2] = c1;
-	const [on, _x1, _x2, _y1, _y2, _z1, _z2] = c2;
+	const [_on, _x1, _x2, _y1, _y2, _z1, _z2] = c2;
 
 
 
@@ -109,23 +109,57 @@ const overlap = (cubes, r) => {
 // TODO
 // https://stackoverflow.com/questions/244452/what-is-an-efficient-algorithm-to-find-area-of-overlapping-rectangles
 // https://stackoverflow.com/questions/12769386/how-to-calculate-total-volume-of-multiple-overlapping-cuboids
+// kudos to Neal Wu for getting first place and explaining how to solve this
 function part2(data) {
 
 	data = parse(data, 'w x=d..d,y=d..d,z=d..d');
 
-	const cubes = [];
+	const X = [], Y = [], Z = [];
 	iter(data, r => {
-		// const [on, x1, x2, y1, y2, z1, z2] = r;
-		overlap(cubes, r)
+		const [on, x1, x2, y1, y2, z1, z2] = r;
+		X.push(x1);
+		X.push(x2 + 1);
+		Y.push(y1);
+		Y.push(y2 + 1);
+		Z.push(z1);
+		Z.push(z2 + 1);
+	});
+
+	sort(X);
+	sort(Y);
+	sort(Z);
+	const n = X.length;
+
+	const GRID = new Array(n).fill(0).map(a => new Array(n).fill(0).map(b => new Uint8Array(n).fill(0)))
+
+	iter(data, r => {
+		const [on, _x1, _x2, _y1, _y2, _z1, _z2] = r;
+		const x1 = X.indexOf(_x1);
+		const x2 = X.indexOf(_x2 + 1);
+		const y1 = Y.indexOf(_y1);
+		const y2 = Y.indexOf(_y2 + 1);
+		const z1 = Z.indexOf(_z1);
+		const z2 = Z.indexOf(_z2 + 1);
+
+		range(x1, x2)(x => {
+			range(y1, y2)(y => {
+				range(z1, z2)(z => {
+					GRID[x][y][z] = on === 'on' ? 1 : 0;
+				})
+			})
+		})
 	})
 
-	let res;
+	let res = 0;
+	for (let i = 0; i < n - 1; ++i) {
+		for (let j = 0; j < n - 1; ++j) {
+			for (let k = 0; k < n - 1; ++k) {
+				res += (GRID[i][j][k]) * (X[i+1] - X[i]) * (Y[j+1] - Y[j]) * (Z[k+1] - Z[k]);
+			}
+		}
+	}
 
 	debug(res);
-	// exec(`echo ${res} | xclip -sel clip -rmlastnl`);
-	// if (res) {
-	// 	exec(getExecStr(2021, 22, 2, res));
-	// }
 	console.log("END OF PART2");
 	return;
 }
