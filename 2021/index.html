@@ -1,0 +1,187 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<title>Page Title</title>
+<style type="text/css">
+  #game {
+    width: 390px;
+    height: 140px;
+  }
+
+  #game-row {
+    width: 100%;
+    height: 20px;
+  }
+
+  #game-col {
+    display: inline-block;
+    width: 30px;
+    height: 20px;
+  }
+
+  #score {
+    width: 400px;
+    height: 100px;
+  }
+
+  #red-circle {
+    background-color: #FFF;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div id="game"></div>
+<div id="score">0</div>
+<div id="red-circle"></div>
+<button id="reset" onclick="resetscore">reset</button>
+
+</body>
+
+<script type="text/javascript">
+  const HALL = [[1, 1], [11, 1]];
+  const ROOMS = {A: 3,B: 5,C: 7,D: 9};
+  const energy = {A:1, B:10, C:100, D:1000};
+</script>
+
+<script type="text/javascript">
+  const resetscore = () => {
+    const score = document.getElementById("score");
+    score.innerText = 0;
+    makeGame();
+  }
+  const inHall = (pos) => {
+    return pos[0] === 1 && 1 <= pos[1] && pos[1] <= 11;
+  }
+  const manDist = (p1, p2) => {
+    return Math.abs(p1[0] - p2[0]) + Math.abs(p1[1] - p2[1]);
+  }
+  const updateEnergy = (e) => {
+    const score = document.getElementById("score");
+    const curr = parseInt(score.innerText, 10);
+    const n = curr + e;
+    score.innerText = n;
+  }
+  const taken = (pos) => {
+    const R = document.getElementsByClassName("game-row-" + pos[0]);
+    const C = R[0].getElementsByClassName("game-col-" + pos[1]);
+    return C[0].innerText !== '.';
+  }
+  const redCircle = (on) => {
+    const rc = document.getElementById("red-circle");
+    rc.style.backgroundColor = on ? "#f00" : "#FFF";
+  }
+  const deactivate = (pos) => {
+    if (!pos.length) return;
+    const R = document.getElementsByClassName("game-row-" + pos[0])[0];
+    const C = R.getElementsByClassName("game-col-" + pos[1])[0];
+    C.style.backgroundColor = "#fff";
+  }
+  const activate = (pos) => {
+    const R = document.getElementsByClassName("game-row-" + pos[0])[0];
+    const C = R.getElementsByClassName("game-col-" + pos[1])[0];
+    C.style.backgroundColor = "#aaa";
+    deactivate(active);
+    active = [...pos];
+  }
+
+  const clearPos = (pos) => {
+    const R = document.getElementsByClassName("game-row-" + pos[0])[0];
+    const C = R.getElementsByClassName("game-col-" + pos[1])[0];
+    C.innerText = '.';
+  }
+
+  const addPos = (id, pos) => {
+    const R = document.getElementsByClassName("game-row-" + pos[0])[0];
+    const C = R.getElementsByClassName("game-col-" + pos[1])[0];
+    C.innerText = id;
+  }
+</script>
+
+<script type="text/javascript">
+  class Node {
+    constructor(id, pos) {
+      this.id = id;
+      this.energy = energy[id];
+      this.pos = pos;
+      this.inHall = false;
+      this.energySpent = 0;
+    }
+
+    move(newPos) {
+      console.log(this.inHall, inHall(newPos))
+      if (inHall(newPos) && this.inHall || taken(newPos)) {
+        redCircle(true);
+        return;
+      }
+      if (inHall(newPos)) {
+        this.inHall = true;
+      }
+      redCircle(false);
+      const en = manDist(this.pos, newPos) * this.energy;
+      updateEnergy(en);
+      clearPos(this.pos);
+      this.pos = [...newPos];
+      addPos(this.id, this.pos);
+    }
+  }
+</script>
+
+<script type="text/javascript">
+  const btn = document.getElementById("reset");
+  btn.onclick = () => resetscore();
+  let active = [];
+  let curr;
+  const makeGame = () => {
+    const G = [
+      '#############',
+      '#...........#',
+      '###B#B#D#A###',
+      '  #D#C#B#A#  ',
+      '  #D#B#A#C#  ',
+      '  #D#C#A#C#  ',
+      '  #########  '];
+    const nodes = [];
+    const game = document.getElementById("game");
+    while (game.children.length) {
+      game.firstChild.remove();
+    }
+    G.forEach((row, i) => {
+      const R = document.createElement("div");
+      R.id = "game-row";
+      R.className = "game-row-" + i;
+      game.appendChild(R);
+      let isNode = false;
+      row.split('').forEach((col, j) => {
+        const C = document.createElement("div");
+        C.id = 'game-col';
+        C.className = 'game-col-' + j;
+        C.innerText = col;
+        R.appendChild(C);
+        if (['A', 'B', 'C', 'D'].indexOf(col) !== -1) {
+          nodes.push(new Node(col, [i, j]));
+          isNode = true;
+        }
+        C.onclick = (evt) => {
+          activate([i, j]);
+          const ND = nodes.find(node => node.pos[0] === i && node.pos[1] === j);
+          if (!ND && curr) {
+            curr.move([i, j]);
+          } else {
+            curr = ND;
+          }
+        }
+        isNode = false;
+      })
+    });
+    return nodes;
+  }
+
+  const nodes = makeGame();
+
+  // console.log(nodes)
+</script>
+</html> 
