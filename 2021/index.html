@@ -3,6 +3,11 @@
 <head>
 <title>AOC 2021 Day 23</title>
 <style type="text/css">
+  body {
+    background-color: #333;
+    color: #fff;
+  }
+
   #game {
     width: 390px;
     height: 140px;
@@ -17,6 +22,7 @@
     display: inline-block;
     width: 30px;
     height: 20px;
+    text-align: center;
   }
 
   #score {
@@ -73,13 +79,13 @@
 
   const redCircle = (on) => {
     const rc = document.getElementById("red-circle");
-    rc.style.backgroundColor = on ? "#f00" : "#FFF";
+    rc.style.backgroundColor = on ? "#f00" : "#333";
   }
 
   const deactivate = (pos) => {
     if (!pos.length) return;
     const C = getC(pos);
-    C.style.backgroundColor = "#fff";
+    C.style.backgroundColor = "#333";
   }
 
   const activate = (pos) => {
