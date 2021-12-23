@@ -1,7 +1,7 @@
  <!DOCTYPE html>
 <html>
 <head>
-<title>Page Title</title>
+<title>AOC 2021 Day 23</title>
 <style type="text/css">
   #game {
     width: 390px;
@@ -32,6 +32,7 @@
   }
 </style>
 </head>
+<meta charset="UTF-8" />
 <body>
 
 <div id="game"></div>
@@ -53,50 +54,48 @@
     score.innerText = 0;
     makeGame();
   }
-  const inHall = (pos) => {
-    return pos[0] === 1 && 1 <= pos[1] && pos[1] <= 11;
+
+  const getC = (pos) => {
+    const R = document.getElementsByClassName("game-row-" + pos[0])[0];
+    return R.getElementsByClassName("game-col-" + pos[1])[0];
   }
-  const manDist = (p1, p2) => {
-    return Math.abs(p1[0] - p2[0]) + Math.abs(p1[1] - p2[1]);
-  }
+
+  const inHall = (p) => p[0] === 1 && 1 <= p[1] && p[1] <= 11;
+  const taken = (pos) => getC(pos).innerText !== '.';
+  const manDist = (p1, p2) => Math.abs(p1[0] - p2[0]) + Math.abs(p1[1] - p2[1]);
+
   const updateEnergy = (e) => {
     const score = document.getElementById("score");
     const curr = parseInt(score.innerText, 10);
     const n = curr + e;
     score.innerText = n;
   }
-  const taken = (pos) => {
-    const R = document.getElementsByClassName("game-row-" + pos[0]);
-    const C = R[0].getElementsByClassName("game-col-" + pos[1]);
-    return C[0].innerText !== '.';
-  }
+
   const redCircle = (on) => {
     const rc = document.getElementById("red-circle");
     rc.style.backgroundColor = on ? "#f00" : "#FFF";
   }
+
   const deactivate = (pos) => {
     if (!pos.length) return;
-    const R = document.getElementsByClassName("game-row-" + pos[0])[0];
-    const C = R.getElementsByClassName("game-col-" + pos[1])[0];
+    const C = getC(pos);
     C.style.backgroundColor = "#fff";
   }
+
   const activate = (pos) => {
-    const R = document.getElementsByClassName("game-row-" + pos[0])[0];
-    const C = R.getElementsByClassName("game-col-" + pos[1])[0];
+    const C = getC(pos);
     C.style.backgroundColor = "#aaa";
     deactivate(active);
     active = [...pos];
   }
 
   const clearPos = (pos) => {
-    const R = document.getElementsByClassName("game-row-" + pos[0])[0];
-    const C = R.getElementsByClassName("game-col-" + pos[1])[0];
+    const C = getC(pos);
     C.innerText = '.';
   }
 
   const addPos = (id, pos) => {
-    const R = document.getElementsByClassName("game-row-" + pos[0])[0];
-    const C = R.getElementsByClassName("game-col-" + pos[1])[0];
+    const C = getC(pos);
     C.innerText = id;
   }
 </script>
@@ -112,7 +111,6 @@
     }
 
     move(newPos) {
-      console.log(this.inHall, inHall(newPos))
       if (inHall(newPos) && this.inHall || taken(newPos)) {
         redCircle(true);
         return;
@@ -133,6 +131,7 @@
 <script type="text/javascript">
   const btn = document.getElementById("reset");
   btn.onclick = () => resetscore();
+
   let active = [];
   let curr;
   const makeGame = () => {
@@ -144,11 +143,13 @@
       '  #D#B#A#C#  ',
       '  #D#C#A#C#  ',
       '  #########  '];
+
     const nodes = [];
     const game = document.getElementById("game");
     while (game.children.length) {
       game.firstChild.remove();
     }
+
     G.forEach((row, i) => {
       const R = document.createElement("div");
       R.id = "game-row";
@@ -161,27 +162,23 @@
         C.className = 'game-col-' + j;
         C.innerText = col;
         R.appendChild(C);
+
         if (['A', 'B', 'C', 'D'].indexOf(col) !== -1) {
           nodes.push(new Node(col, [i, j]));
-          isNode = true;
         }
+
         C.onclick = (evt) => {
           activate([i, j]);
           const ND = nodes.find(node => node.pos[0] === i && node.pos[1] === j);
-          if (!ND && curr) {
+          if (!ND && curr)
             curr.move([i, j]);
-          } else {
+          else
             curr = ND;
-          }
         }
-        isNode = false;
       })
     });
-    return nodes;
   }
 
-  const nodes = makeGame();
-
-  // console.log(nodes)
+  makeGame();
 </script>
 </html> 

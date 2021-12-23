@@ -41,8 +41,9 @@ function part2(data) {
 function main() {
 	let data = fs.readFileSync("23_input").toString("utf-8");
 
-	part1(data);
-	part2(data);
+	// sovled by hand with index.html
+	part1(data); // 15412
+	part2(data); // 52358
 	process.exit(0);
 }
 
