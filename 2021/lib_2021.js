@@ -1,5 +1,27 @@
-const { int, num } = require("../lib");
+const { int, num, mod: _mod } = require("../lib");
 const { min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI } = Math;
+
+const isVar = (n) => 'wxyz'.indexOf(n) !== -1;
+
+const ALU = {
+    inp: (a, n) => VARS[a] = n,
+    add: (a, b) => VARS[a] = VARS[a] + (isVar(b) ? VARS[b] : int(b)),
+    mul: (a, b) => VARS[a] = VARS[a] * (isVar(b) ? VARS[b] : int(b)),
+    div: (a, b) => {
+    	if (!isVar(b) && int(b) === 0 || isVar(b) && VARS[b] === 0) return 0;
+    	return VARS[a] = Math.trunc(VARS[a] / (isVar(b) ? VARS[b] : int(b)));
+    },
+    mod: (a, b) => {
+    	if (!isVar(b) && int(b) <= 0 || isVar(b) && VARS[b] <= 0) 
+    		return 0;
+    	else if (!isVar(a) && int(a) < 0 || isVar(a) && VARS[a] < 0) 
+    		return 0
+    	return VARS[a] = _mod(VARS[a], isVar(b) ? VARS[b] : int(b))
+    },
+    eql: (a, b) => VARS[a] = Number(VARS[a] === (isVar(b) ? VARS[b] : int(b)))
+}
+const VARS = { w: 0, x: 0, y: 0, z: 0 };
+const resetVars = () => ['w', 'x', 'y', 'z'].forEach(k => VARS[k] = 0);
 
 const HEX = {
 	'0': '0000',
@@ -81,5 +103,6 @@ const parsePacket = (bits) => {
 }
 
 module.exports = {
-	HEX, ops, parsePacket
+	HEX, ops, parsePacket,
+	ALU, VARS, resetVars
 }

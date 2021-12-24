@@ -12,28 +12,6 @@ const { isSuperset, or, and, xor, sub } = set;
 const { getExecStr } = require("../lib/post");
 // const { parsePacket, ops, HEX } = require('./lib_2021'); // specific to AOC 2021
 
-const isVar = (n) => 'wxyz'.indexOf(n) !== -1;
-
-const ALU = {
-    inp: (a, n) => VARS[a] = n,
-    add: (a, b) => VARS[a] = VARS[a] + (isVar(b) ? VARS[b] : int(b)),
-    mul: (a, b) => VARS[a] = VARS[a] * (isVar(b) ? VARS[b] : int(b)),
-    div: (a, b) => {
-    	if (!isVar(b) && int(b) === 0 || isVar(b) && VARS[b] === 0) return 0;
-    	return VARS[a] = Math.trunc(VARS[a] / (isVar(b) ? VARS[b] : int(b)));
-    },
-    mod: (a, b) => {
-    	if (!isVar(b) && int(b) <= 0 || isVar(b) && VARS[b] <= 0) 
-    		return 0;
-    	else if (!isVar(a) && int(a) < 0 || isVar(a) && VARS[a] < 0) 
-    		return 0
-    	return VARS[a] = mod(VARS[a], isVar(b) ? VARS[b] : int(b))
-    },
-    eql: (a, b) => VARS[a] = Number(VARS[a] === (isVar(b) ? VARS[b] : int(b)))
-}
-const VARS = { w: 0, x: 0, y: 0, z: 0 };
-const resetVars = () => ['w', 'x', 'y', 'z'].forEach(k => VARS[k] = 0);
-
 function part1(data, part) {
 	data = groupsWith(data, 'inp');
 	const S = new Stack();

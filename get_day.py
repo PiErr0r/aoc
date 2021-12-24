@@ -63,7 +63,7 @@ const {{ digits, ints,	floats,	singles,	words,	lines,	table,	groups,	getGroups,	
 const {{ min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI }} = Math;
 const {{ isSuperset, or, and, xor, sub }} = set;
 const {{ getExecStr }} = require("../lib/post");
-// const {{ parsePacket, ops, HEX }} = require('./lib_2021'); // specific to AOC 2021
+// const {{ parsePacket, ops, HEX, ALU, VARS, resetVars }} = require('./lib_2021'); // specific to AOC 2021
 
 function part1(data) {{
 
