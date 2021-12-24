@@ -32,109 +32,75 @@ const ALU = {
     eql: (a, b) => VARS[a] = Number(VARS[a] === (isVar(b) ? VARS[b] : int(b)))
 }
 const VARS = { w: 0, x: 0, y: 0, z: 0 };
+const resetVars = () => ['w', 'x', 'y', 'z'].forEach(k => VARS[k] = 0);
 
-const subtr = (s, n) => {
-	if (!n) return s;
-	const tmp = n;
-	let i = 0;
-	while (n) {
-		++i;
-		n /= 10;
-	}
-	return s.slice(0, s.length - i) + (int(s.slice(s.length - i)) - tmp);
-}
-
-const resetVars = () => {
-	['w', 'x', 'y', 'z'].forEach(k => VARS[k] = 0);
-}
-
-function part1(data) {
-
-	data = lines(data);
-	// let n = '99992412090984'
-	// let n = '99992120248899'
-	// let n = '9'.repeat(13) + '3';
-	// let n = '9992' + '9'.repeat(10)
-	// let n = '12332112332112';
-	// let n = '13579246899999';
-	let N = '1' + '0'.repeat(5) + '9'.repeat(8);
-	// debug(subtr(N, 40000))
-	// return
-	let res = 1;
-	let cnt = 0;
-	while (res) {
-		let ni = 0;
-		let n = subtr(N, cnt);
-		resetVars();
-
-		iter(data, (ins, i) => {
-			const [op, ...ab] = ins.split(' ');
-				// debug(...ab, n[ni])
-			if (op === 'inp') {
-				ALU[op](...ab, int(n[ni]));
-				++ni;
-			} else {
-				ALU[op](...ab);
-			}
-			// if (i < 15)
-			// debug(op, ...ab, VARS)
-		})
-		if (cnt % 11111 === 0) {
-			debug("iter:", cnt, "n:", n, "res:", res, VARS)
+function part1(data, part) {
+	data = groupsWith(data, 'inp');
+	const S = new Stack();
+	const inp = empty(14);
+	iter(data, (d, i) => {
+		d = lines(d).map(a => a.split(' '));
+		const cond = int(d[5][2]);
+		const val = int(d[d.length - 3][2])
+		if (cond > 0) {
+			S.push([i, val]);
+		} else {
+			const [ii, eq] = S.pop();
+			const dd = abs(cond) - eq;
+			const f = 9 + min(dd, 0);
+			const s = 9 * 2 - f - abs(dd);
+			const mxd = min(s, f) - 1;
+			inp[i] = part === 1 ? s : s - mxd;
+			inp[ii] = part === 1 ? f : f - mxd;
 		}
-		res = VARS.z;
-		++cnt;
-	}
+	});
+	let res = inp.join('');
 
-
-	debug('end', res, VARS);
-	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
-	if (res) {
-		exec(getExecStr(2021, 24, 1, res));
-	}
+	debug(res);
 	console.log("END OF PART1");
 	return;
 }
 
 function part2(data, part) {
+	// solved bu hand
 
-	// in3 + 6 = in4 + 14 => in3 = in4 + 8 		: 1 9
-	// in5 + 9 = in6 + 7  => in5 = in6 - 2 		: 9 7
-	// in9 + 1 = in10 + 7 => in9 = in10 + 6 	: 3 9
-	// in8 + 3 = in11 + 8 => in8 = in11 + 5 	: 4 9
-	// in7 + 14 = in12 + 7 => in7 = in12 - 7 	: 9 2
-	// in2 + 5 = in13 + 5 => in2 = in13 			: 9 9
-	// in1 + 15 = in14 + 10 => in1 = in14 - 5 : 9 4
+	// in3 + 6 = in4 + 14 => in3 = in4 + 8		: 1 9
+	// in5 + 9 = in6 + 7  => in5 = in6 - 2		: 9 7
+	// in9 + 1 = in10 + 7 => in9 = in10 + 6		: 3 9
+	// in8 + 3 = in11 + 8 => in8 = in11 + 5		: 4 9
+	// in7 + 14 = in12 + 7 => in7 = in12 - 7	: 9 2
+	// in2 + 5 = in13 + 5 => in2 = in13			: 9 9
+	// in1 + 15 = in14 + 10 => in1 = in14 - 1	: 9 4
 
-	// in3 + 6 = in4 + 14 => in3 = in4 + 8 		: 1 9
-	// in5 + 9 = in6 + 7  => in5 = in6 - 2 		: 3 1
-	// in9 + 1 = in10 + 7 => in9 = in10 + 6 	: 1 7
-	// in8 + 3 = in11 + 8 => in8 = in11 + 5 	: 1 6
-	// in7 + 14 = in12 + 7 => in7 = in12 - 7 	: 8 1
-	// in2 + 5 = in13 + 5 => in2 = in13 			: 1 1
-	// in1 + 15 = in14 + 10 => in1 = in14 - 5 : 6 1
+	// in3 + 6 = in4 + 14 => in3 = in4 + 8		: 1 9
+	// in5 + 9 = in6 + 7  => in5 = in6 - 2		: 3 1
+	// in9 + 1 = in10 + 7 => in9 = in10 + 6		: 1 7
+	// in8 + 3 = in11 + 8 => in8 = in11 + 5		: 1 6
+	// in7 + 14 = in12 + 7 => in7 = in12 - 7	: 8 1
+	// in2 + 5 = in13 + 5 => in2 = in13			: 1 1
+	// in1 + 15 = in14 + 10 => in1 = in14 - 5	: 6 1
 
-	const inp = part === 1 
-		? [0, 4, 9, 9, 1, 7, 9, 2, 9, 9, 3, 4, 9, 9, 9]
-		: [0, 1, 1, 9, 1, 1, 3, 1, 6, 7, 1, 1, 8, 1, 6];
+	const i = part === 1 
+		? [4, 9, 9, 1, 7, 9, 2, 9, 9, 3, 4, 9, 9, 9]
+		: [1, 1, 9, 1, 1, 3, 1, 6, 7, 1, 1, 8, 1, 6];
+	let z;
+	z = (i[1 - 1] + 15);
+	z = z * 26 + (i[2 - 1] + 5);
+	z = z * 26 + (i[3 - 1] + 6);
+	z = !(z % 26 - 14 === i[4 - 1]) ? (floor(z / 26) * 26 + (i[4 - 1] + 7)) : floor(z / 26);
+	z = z * 26 + (i[5 - 1] + 9);
+	z = !(z % 26 - 7 === i[6 - 1]) ? (floor(z / 26) * 26 + (i[6 - 1] + 6)) : floor(z / 26);
+	z = z * 26 + (i[7 - 1] + 14);
+	z = z * 26 + (i[8 - 1] + 3);
+	z = z * 26 + (i[9 - 1] + 1);
+	z = !(z % 26 - 7 === i[10 - 1]) ? (floor(z / 26) * 26 + (i[10 - 1] + 3)) : floor(z / 26);
+	z = !(z % 26 - 8 === i[11 - 1]) ? (floor(z / 26) * 26 + (i[11 - 1] + 4)) : floor(z / 26);
+	z = !(z % 26 - 7 === i[12 - 1]) ? (floor(z / 26) * 26 + (i[12 - 1] + 6)) : floor(z / 26);
+	z = !(z % 26 - 5 === i[13 - 1]) ? (floor(z / 26) * 26 + (i[13 - 1] + 7)) : floor(z / 26);
+	z = !(z % 26 - 10 === i[14 - 1]) ? (floor(z / 26) * 26 + (i[14 - 1] + 1)) : floor(z / 26);
 
-	let pz1 = (inp[1] + 15);
-	let pz2 = pz1 * 26 + (inp[2] + 5);
-	let pz3 = pz2 * 26 + (inp[3] + 6);
-	let pz4 = !(pz3 % 26 - 14 === inp[4]) ? (floor(pz3 / 26) * 26 + (inp[4] + 7)) : floor(pz3 / 26);
-	let pz5 = pz4 * 26 + (inp[5] + 9);
-	let pz6 = !(pz5 % 26 - 7 === inp[6]) ? (floor(pz5 / 26) * 26 + (inp[6] + 6)) : floor(pz5 / 26);
-	let pz7 = pz6 * 26 + (inp[7] + 14);
-	let pz8 = pz7 * 26 + (inp[8] + 3);
-	let pz9 = pz8 * 26 + (inp[9] + 1);
-	let pz10 = !(pz9 % 26 - 7 === inp[10]) ? (floor(pz9 / 26) * 26 + (inp[10] + 3)) : floor(pz9 / 26);
-	let pz11 = !(pz10 % 26 - 8 === inp[11]) ? (floor(pz10 / 26) * 26 + (inp[11] + 4)) : floor(pz10 / 26);
-	let pz12 = !(pz11 % 26 - 7 === inp[12]) ? (floor(pz11 / 26) * 26 + (inp[12] + 6)) : floor(pz11 / 26);
-	let pz13 = !(pz12 % 26 - 5 === inp[13]) ? (floor(pz12 / 26) * 26 + (inp[13] + 7)) : floor(pz12 / 26);
-	let pz14 = !(pz13 % 26 - 10 === inp[14]) ? (floor(pz13 / 26) * 26 + (inp[14] + 1)) : floor(pz13 / 26);
-
-	let res = inp.slice(1).join('');
-	console.assert(pz14 === 0)
+	let res = i.join('');
+	console.assert(z === 0)
 	debug(res);
 	// exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 	// if (res) {
@@ -147,7 +113,8 @@ function part2(data, part) {
 function main() {
 	let data = fs.readFileSync("24_input").toString("utf-8");
 
-	// part1(data);
+	part1(data, 1);
+	part1(data, 2);
 	part2(data, 1);
 	part2(data, 2);
 	process.exit(0);
