@@ -1,5 +1,5 @@
 var fs = require('fs');
-var { debug } = require("../helpers");
+var { debug } = require("../lib");
 
 function part1(data) {
 

@@ -171,17 +171,22 @@ if __name__ == '__main__':
 			ext = sys.argv[3]
 			if year < 2015:
 				print(USE_YEAR_LOW)
+				exit(1)
 			elif year > NOW.year:
 				print(USE_YEAR_HIGH)
+				exit(1)
 			else:
 				if year == NOW.year and NOW.month != 12:
 					print(USE_NOT_STARTED)
+					exit(1)
 				else:
 					if day < 1 or day > 25:
 						print(USE_DAY)
+						exit(1)
 					else:
 						if ext not in ['js', 'py']:
 							print(USE_EXT)
+							exit(1)
 						else:
 							main(*sys.argv[1:])
 			
@@ -189,4 +194,5 @@ if __name__ == '__main__':
 			print(USE_ARG)
 			print(USE_TYPE)
 			print(ex)
+			exit(1)
 

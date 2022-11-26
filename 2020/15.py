@@ -9,9 +9,10 @@ def rl(arr):
 
 def solve(data, part):
 	i = 0
-	spoken = {}
 	prev, curr = None, None
 	limit = 2020 if part == 1 else 30000000
+	# spoken = {}
+	spoken = [0 for i in range(limit)]
 	while i < limit:
 		if i % 1000000 == 0:
 			print(i)
@@ -23,7 +24,8 @@ def solve(data, part):
 			i += 1
 			continue
 
-		curr = i - spoken.get(prev[0], i)
+		# curr = i - spoken.get(prev[0], i)
+		curr = i - (spoken[prev[0]] if spoken[prev[0]] else i)
 		spoken[prev[0]] = prev[1] + 1
 		prev = (curr, i)
 		i += 1

@@ -36,6 +36,15 @@ def part_1(data):
 	return
 
 def FFT_mod(data):
+	S = 0
+	res = [0 for i in range(len(data))]
+	print(data[:10])
+	for i in reversed(data):
+		S = (S + i) % 10
+		res[i] = S
+	return res
+
+def FFT_modxx(data):
 	res = ''
 	S = 0
 	Z = ord('0')
@@ -107,9 +116,11 @@ def part_2(data):
 	reps = diff // ld + 1
 	goal = reps * ld - diff
 	data = data * reps
-	print(diff, len(data), int(data[:7]))
+	data = list(map(int, data))
+	# print(diff, len(data), int(data[:7]))
 
 	for phase in range(100):
+		print(phase)
 		data = FFT_mod(data)
 
 	print(''.join(map(str,data[ goal: goal + 8 ])))

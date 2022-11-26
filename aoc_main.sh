@@ -7,4 +7,8 @@ if [ $# -eq 0 ]; then
 fi
 
 # echo https://adventofcode.com/`date +"%Y %e"`;
-./get_day.py `date +"%Y %e"` $1; subl `date +"%Y"`/`date +"%d"`*
+./get_day.py `date +"%Y %e"` $1;
+if [ $? == 0 ];
+then
+    subl `date +"%Y"`/`date +"%d"`*
+fi
