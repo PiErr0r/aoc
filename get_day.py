@@ -118,6 +118,7 @@ def main(*args):
 	r_content = BeautifulSoup(r.text, 'html.parser')
 
 	r_main = re.sub(r'window.*', '', str(r_content.find('main')))
+	r_main = re.sub(r'<style>.*</style>', '', r_main).strip()
 	r_main = re.sub(r'<\s*[A-Za-z\/]+[^<>]*>|window.*$', '', r_main).strip()
 
 	curr_dir = os.getcwd()
@@ -126,7 +127,6 @@ def main(*args):
 		os.chdir('../')
 	except:
 		os.mkdir(f"{curr_dir}/{year}")
-
 	with open(f'./{year}/{day}_input', 'w') as f:
 		if ord(r_input.text[-1]) == 10:
 			f.write(r_input.text[:-1])

@@ -11,4 +11,6 @@ fi
 if [ $? == 0 ];
 then
     subl `date +"%Y"`/`date +"%d"`*
+else
+    echo "Not able to open files in Sublime since an error occurred";
 fi
