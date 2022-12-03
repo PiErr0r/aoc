@@ -38,8 +38,7 @@ function part2(data) {
 	data = lines(data);
 	let res = 0;
 	range(0, data.length, 3)(i => {
-		let diff = set.and(data[i], data[i+1]);
-		diff = set.and(diff, data[i+2]);
+		let diff = set.and(data[i], set.and(data[i+1], data[i+2]));
 		let L = [...diff][0];
 		if ('a' <= L && L <='z') {
 			res += ord(L) - ord('a') + 1;
