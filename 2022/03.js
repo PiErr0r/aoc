@@ -17,8 +17,8 @@ function part1(data) {
 	data = lines(data)
 	let res = 0;;
 	iter(data, row => {
-		let fst = new set(row.split('').slice(0, int(row.length / 2)));
-		let snd = new set(row.split('').slice(int(row.length / 2)));
+		let fst = row.slice(0, int(row.length / 2));
+		let snd = row.slice(int(row.length / 2));
 		let diff = set.and(fst, snd);
 		const L = [...diff][0];
 		if ('a' <= L && L <='z') {
@@ -38,8 +38,8 @@ function part2(data) {
 	data = lines(data);
 	let res = 0;
 	range(0, data.length, 3)(i => {
-		let diff = set.and(new set(data[i].split('')), new set(data[i+1].split('')));
-		diff = set.and(diff, new set(data[i+2].split('')));
+		let diff = set.and(data[i], data[i+1]);
+		diff = set.and(diff, data[i+2]);
 		let L = [...diff][0];
 		if ('a' <= L && L <='z') {
 			res += ord(L) - ord('a') + 1;
