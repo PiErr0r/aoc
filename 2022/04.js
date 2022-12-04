@@ -19,14 +19,8 @@ function part1(data) {
 
 	let res1 = 0, res2 = 0;
 	iter(data, ([x1, x2, y1, y2]) => {
-		const between = x1 >= y1 && x2 <= y2 || y1 >= x1 && y2 <= x2;
-		if (between) {
-			++res1; //2:30 - 3
-		};
-		const yInx = x1 <= y1 && y1 <= x2 || x1 <= y2 && y2 <= x2;
-		if (between || yInx) {
-			++res2; // 9:30
-		};
+		if (x1 >= y1 && x2 <= y2 || y1 >= x1 && y2 <= x2) ++res1; // @3:15
+		if (x1 <= y2 && x2 >= y1) ++res2; // 8:35
 	})
 
 
