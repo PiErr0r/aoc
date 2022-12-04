@@ -55,6 +55,7 @@ program_text_js = """
 const fs = require('fs');
 const {{ exec }} = require("child_process");
 const {{ D4, D6, D8, MOD }} = require("../lib");
+const {{ cache }} = require("../lib");
 const {{ bin, float, hex, int, num, oct }} = require("../lib");
 const {{ range, drange, trange, iter, diter, titer }} = require("../lib");
 const {{ copy,	entries, in_, inBB, keys, sort, values }} = require("../lib");
