@@ -18,9 +18,9 @@ function part1(data) {
 	data = parse(data, 'd-d,d-d');
 
 	let res1 = 0, res2 = 0;
-	iter(data, ([x1, x2, y1, y2]) => {
-		if (x1 >= y1 && x2 <= y2 || y1 >= x1 && y2 <= x2) ++res1; // @3:15
-		if (x1 <= y2 && x2 >= y1) ++res2; // 8:35
+	iter(data, ([x1, y1, x2, y2]) => {
+		if (x1 >= x2 && y1 <= y2 || x2 >= x1 && y2 <= y1) ++res1; // @3:15
+		if (x1 <= y2 && y1 >= x2)  ++res2; // 8:35
 	})
 
 
