@@ -27,33 +27,29 @@ const START = `
  1   2   3   4   5   6   7   8   9 
 `;
 
-// const START = `
-//     [D]    
-// [N] [C]    
-// [Z] [M] [P]
-//  1   2   3 
-// `
-
 function part1(data) {
 	data = parse(data, 'w d w d w d').map(r => [r[1], r[3], r[5]]);
-	let tmp = transpose(START.split('\n').map(r => r.split(''))).map(r => r.reverse());
-	// debug(tmp[1])
-	tmp = tmp.filter(r => r[0] !== ']' && r[0].trim().length > 0)
-	tmp = tmp.map(r => r.slice(1)).map(r => r.filter(c => c.trim().length))
-	// debug(tmp)
+	let start1 = transpose(START.split('\n').map(r => r.split(''))).map(r => r.reverse());
+	start1 = start1
+		.filter(r => r[0].trim().length > 0)
+		.map(r => r.slice(1))
+		.map(r => r.filter(c => c.trim().length));
+	let start2 = copy(start1);
 	let res;
 
 	iter(data, row => {
 		const [amount, from, to] = row;
-		const items = tmp[from - 1].splice(tmp[from - 1].length - amount)/*.reverse()*/;
-		tmp[to -1] = [...tmp[to -1], ...items];
-		// debug(tmp)
-	})
-	debug(tmp.map(r => r[r.length - 1]).join(""))
+		const items1 = start1[from - 1].splice(start1[from - 1].length - amount).reverse();
+		const items2 = start2[from - 1].splice(start2[from - 1].length - amount);
+		start1[to -1] = [...start1[to -1], ...items1];
+		start2[to -1] = [...start2[to -1], ...items2];
+	});
 
-	debug(res);
-	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
+	debug(start1.map(r => r[r.length - 1]).join(""));
 	console.log("END OF PART1");
+	debug(start2.map(r => r[r.length - 1]).join(""));
+	console.log("END OF PART2");
+	// exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 	return;
 }
 
@@ -71,7 +67,7 @@ function main() {
 	let data = fs.readFileSync("05_input").toString("utf-8");
 
 	part1(data);
-	part2(data);
+	// part2(data);
 	process.exit(0);
 }
 
