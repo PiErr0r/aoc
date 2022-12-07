@@ -127,10 +127,67 @@ function part2(fileTree) {
 	return;
 }
 
+const setSize = (tree, p, size) => {
+	while (p !== null) {
+		tree[p].size += size;
+		p = tree[p].p;
+	}
+}
+
+const solve = (data) => {
+	data = lines(data);
+	let i = 0;
+	const tree = { '-/': { p: null, size: 0 }};
+	let p = '';
+	while (i < data.length) {
+		const tmp = data[i].split(" ");
+		switch (tmp[1]) {
+			case "cd":
+				if (tmp[2] === '..') {
+					p = tree[p].p;
+				} else {
+					p += '-' + tmp[2];
+				}
+				break;
+			case "ls":
+				++i;
+				while (i < data.length && data[i][0] !== "$") {
+					let [desc, name] = data[i].split(" ");
+					switch (desc) {
+						case "dir":
+							tree[p + '-' + name] = { p, size: 0 };
+							break;
+						default:
+							desc = int(desc);
+							setSize(tree, p, desc);
+					}
+					// debug(i)
+					++i;
+				}
+				continue;
+		}
+		++i;
+	}
+	let res = 0;
+	const available = 70000000;
+	const used = tree['-/'].size;
+	const toFree = 30000000 - (available - used);
+	let mn = used + 1;
+	keys(tree).forEach(k => {
+		if (tree[k].size <= MOST) res += tree[k].size;
+		if (tree[k].size >= toFree) mn = min(mn, tree[k].size);
+	});
+	debug(res);
+	console.log("END OF PART1");
+	debug(mn);
+	console.log("END OF PART2");
+}
+
 function main() {
 	let data = fs.readFileSync("07_input").toString("utf-8");
 
-	part1(data);
+	// part1(data);
+	solve(data);
 	// part2(data);
 	process.exit(0);
 }
