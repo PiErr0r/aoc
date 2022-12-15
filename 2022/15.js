@@ -62,6 +62,12 @@ function part2(data) {
 	data = lines(data).map(r => ints(r))
 	const ROWS = 4000000;
 
+	// TODO: optimization
+	// for combination of 2 sensors go through the edge if its width is 1
+	// then for all of the remaining sensors check if it overlaps the current coordinate
+	// if none does thats the result, otherwise continue
+	// additional optimization, if it overlaps move curent coord to outside of sensor we're currently overlapping
+
 	let res = 0;
 	range(1, ROWS + 1)(Y => {
 		const intervals = [];
