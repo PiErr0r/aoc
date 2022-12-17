@@ -138,8 +138,6 @@ function part1(data) {
 }
 
 const dfs2 = (data, curr, currEl, round, roundEl, total, p, pEl) => {
-	// console.assert(round === roundEl)
-	// if (allOpen(data)) debug('!!!',round)
 	if (allOpen(data) || round >= 26 || roundEl >= 26) return [total, p, pEl];
 	let mx = 0, a = '', b = '', _, c;
 	const TMP1 = 26;
@@ -199,6 +197,55 @@ const dfs2 = (data, curr, currEl, round, roundEl, total, p, pEl) => {
 	return [max(mx, total), p];
 }
 
+const calcPressure = (valves, turned) => {
+	let pressure = 0;
+	// debug(turned)
+	iter(turned.items(), valve => {
+		// debug('###',pressure, valve, valves[valve])
+		pressure += valves[valve].rate;
+	});
+	return pressure;
+}
+
+const solve = (data) => {
+	let states = [[0, new set(), 'AA', 'AA']];
+	const goodCnt = keys(data).reduce((acc, curr) => {
+		if (data[curr].rate !== 0) 
+			acc += data[curr].rate;
+		return acc;
+	}, 0);
+	range(26)(M => {
+		debug("min", M);
+		const nStates = [];
+		iter(states, ([pressure, turned, me, ele]) => {
+			// if (turned.size / 2 >= goodCnt) {
+			// 	nStates.push([pressure + calcPressure(turned), turned, me, ele]);
+			// }
+			const mes = data[me].children.map(c => [c, turned]);
+			const eles = data[ele].children.map(c => [c, turned]);
+			if (!turned.has(me) && data[me].rate > 0) {
+				mes.push([me, set.or(turned, [me])]);
+			}
+			if (!turned.has(ele) && data[ele].rate > 0) {
+				eles.push([ele, set.or(turned, [ele])]);
+			}
+			iter(mes, ([nMe, meT]) => {
+				iter(eles, ([nEle, eleT]) => {
+					nStates.push([
+						pressure + calcPressure(data, turned),
+						set.or(turned, set.or(meT, eleT)),
+						nMe,
+						nEle,
+					])
+				})
+			});
+		});
+		sort(nStates, (a, b) => b[0] - a[0]);
+		states = nStates.slice(0, M < 5 ? 14000 : 4000)
+	})
+	return states[0][0];
+}
+
 function part2(data) {
 
 	data = lines(data)
@@ -206,35 +253,14 @@ function part2(data) {
 		.map(([a, b, ...c]) => [a, int(b), ...c])
 		.reduce((acc, curr) => {
 			const [valve, rate, ...children] = curr;
-			// debug(rate)
 			acc[valve] = { rate, children, open: rate === 0 };
 			return acc;
 		}, {});
 
-	iter(keys(data), k => {
-		data[k].children = data[k].children.map(c => [c, 1])
-	});
-	mergeZeroes(data);
-	removeZeroes(data);
-	iter(keys(data), k => {
-		if (k !== 'AA' && data[k].open) {
-			delete data[k];
-		}
-	})
+	let res = solve(data);
 
-	iter(keys(data), valve => {
-		sort(data[valve].children, (a, b) => data[a[0]].rate - data[b[0]].rate);
-	});
-
-	// debug(combinations(data['AA'].children, 2))
-	debug(data);
-
-	// return;
-	let res, _
-	[res, _] = dfs2(data, 'AA', 'AA', 1, 1, 0, '', '');
-
-	debug(res);
-	// exec(`echo ${res} | xclip -sel clip -rmlastnl`);
+	debug(res); // 2304
+	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART2");
 	return;
 }
