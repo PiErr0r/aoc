@@ -12,7 +12,8 @@ const { digits, ints,	floats,	singles,	words,	lines,	table,	groups,	getGroups,	g
 const { min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI } = Math;
 const { isSuperset, or, and, xor, sub } = set;
 const { getExecStr } = require("../lib/post");
-const { combinations, combinations_with_replacement, next_permutation, product } = require("../lib/itertools");
+const { combinations, combinations_with_replacement, next_permutation, product } = require("../lib");
+const { findCycle } = require("../lib");
 // const { parsePacket, ops, HEX, ALU, VARS, resetVars } = require('./lib_2021'); // specific to AOC 2021
 
 const PATTERNS = `####
@@ -107,18 +108,6 @@ OUTER:
 	return [h + p.length, d];
 }
 
-const findCycle = (A) => {
-	let slow = 0, fast = 0;
-	do {
-		slow = (slow + 1) % A.length;
-		fast = (fast + 2) % A.length;
-		if (A[slow][0] === A[fast][0] && A[slow][1] === A[fast][1] && A[slow][2] === A[fast][2]) {
-			return [slow, fast];
-		}
-	} while (A[slow][0] !== A[fast][0] || A[slow][1] !== A[fast][1] || A[slow][2] !== A[fast][2]);
-	return [slow, fast]
-}
-
 function part1(data) {
 
 	data = singles(data);
@@ -166,7 +155,7 @@ function part1(data) {
 	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART1");
 
-	const [slow, fast] = findCycle(P);
+	const [slow, fast] = findCycle(P, (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2]);
 	const pattern = P.slice(slow, fast);
 	const b = pattern.length;
 	const S = sum(pattern.map(a => a[0]));

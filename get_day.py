@@ -55,6 +55,7 @@ program_text_js = """
 const fs = require('fs');
 const {{ exec }} = require("child_process");
 const {{ D4, D6, D8, MOD }} = require("../lib");
+const {{ joseph, findCycle }} = require("../lib");
 const {{ cache }} = require("../lib");
 const {{ bin, float, hex, int, num, oct }} = require("../lib");
 const {{ range, drange, trange, iter, diter, titer }} = require("../lib");
@@ -65,8 +66,7 @@ const {{ digits, ints,	floats,	singles,	words,	lines,	table,	groups,	getGroups,	
 const {{ min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI }} = Math;
 const {{ isSuperset, or, and, xor, sub }} = set;
 const {{ getExecStr }} = require("../lib/post");
-const {{ combinations, combinations_with_replacement, next_permutation, product }} = require("../lib/itertools");
-// const {{ parsePacket, ops, HEX, ALU, VARS, resetVars }} = require('./lib_2021'); // specific to AOC 2021
+const {{ combinations, combinations_with_replacement, next_permutation, product }} = require("../lib");
 
 function part1(data) {{
 
