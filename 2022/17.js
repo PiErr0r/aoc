@@ -107,15 +107,31 @@ OUTER:
 	return [h + p.length, d];
 }
 
+const findCycle = (A) => {
+	let slow = 0, fast = 0;
+	do {
+		slow = (slow + 1) % A.length;
+		fast = (fast + 2) % A.length;
+		if (A[slow][0] === A[fast][0] && A[slow][1] === A[fast][1] && A[slow][2] === A[fast][2]) {
+			return [slow, fast];
+		}
+	} while (A[slow][0] !== A[fast][0] || A[slow][1] !== A[fast][1] || A[slow][2] !== A[fast][2]);
+	return [slow, fast]
+}
+
 function part1(data) {
 
 	data = singles(data);
-	const ROUNDS = 2022;
+	const ROUNDS = 10000; // 2022;
 	let currH = 3, currD = 0, curr = 0;
 	const G = empty(4, 7);
+	let GG;
 	let res;
 	let p = 0, P = [];
 	range(ROUNDS)(_ => {
+		if (_ === 2022) {
+			GG = copy(G);
+		}
 		let [tmp, tmpD] = simulate(G, currH, currD, curr, data);
 		currD = tmpD;
 		currH = max(tmp, currH - 4) + 4;
@@ -127,19 +143,19 @@ function part1(data) {
 		currH = G.length - i + 4;
 
 		// needed for part2
-		P.push(G.length - i - p)
+		P.push([G.length - i - p, currD, curr]);
 		p = G.length - i;
 		curr = (curr + 1) % PATTERNS.length;
 		
-		if (currD === 0) {
-			debug("GO WITH DATA AGAIN");
+		if (currD < 5) {
+			// debug("GO WITH DATA AGAIN");
 		}
-	})
+	});
 
-	iter(G, (row, r) => {
+	iter(GG, (row, r) => {
 		iter(row, col => {
 			if (col === 1) {
-				res = G.length - r;
+				res = GG.length - r;
 				return true;
 			}
 		})
@@ -149,6 +165,15 @@ function part1(data) {
 	debug(res);
 	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART1");
+
+	const [slow, fast] = findCycle(P);
+	const pattern = P.slice(slow, fast);
+	const b = pattern.length;
+	const S = sum(pattern.map(a => a[0]));
+	const c = 1000000000000;
+	const d = sum(P.slice(0, c % b + 1).map(a => a[0]));
+	res = d + S * floor(c / b);
+	debug(res, b, S, d)
 	return;
 }
 
@@ -160,9 +185,10 @@ function part2(data) {
 	 * 2. its length is the length of the pattern
 	 * 3. a = 240 // number of rounds before pattern starts to appear
 	 * 4. b = 1740 // length of pattern
-	 * 5. S = 2681 // sum of round differences in a pattern
-	 * 6. d = 1799 // result of first c % b = 1180 rounds
-	 * 7. res = floor(c / b) * S + d
+	 * 5. c = 1000000000000
+	 * 6. S = 2681 // sum of round differences in a pattern
+	 * 7. d = 1799 // result of first c % b = 1180 rounds
+	 * 8. res = floor(c / b) * S + d
 	 * */
 
 	let res = 1540804597682;
