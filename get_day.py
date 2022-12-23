@@ -103,7 +103,7 @@ def main(*args):
 	[year, day, ext] = args
 
 	with open('session', 'r') as f:
-		session = f.read()
+		session = f.read().strip()
 	
 	if len(session) == 0:
 		return
