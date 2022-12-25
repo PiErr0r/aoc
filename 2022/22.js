@@ -68,7 +68,158 @@ const move = (G, r, c, dir, n) => {
 	return [r, c];
 }
 
-function part1(data) {
+const wrapCube = (G, r, c, dir) => {
+	const [dy, dx] = D4[dir];
+	if (dy) {
+		if (r === 0 && dy === -1) {
+			if (c >= 50 && c < 100) {
+				return [150 + c - 50, 0, 0];
+			} else if (c >= 100 && c < 150) {
+				return [199, c - 100, 3]
+			} else {
+				debug("BAD STUFF", r, c, dx, dy);	
+			}
+		} else if (r === 49 && dy === 1) {
+			if (c >= 50 && c < 100) {
+				return [50, c, 1]
+			} else if (c >= 100 && c < 150) {
+				return [50 + c - 100, 99, 2]
+			} else {
+				debug("BAD STUFF", r, c, dx, dy);
+			}
+		} else if (r === 50 && dy === -1) {
+			if (c >= 50 && c < 100) {
+				return [49, c, 3];
+			} else {
+				debug("BAD STUFF", r, c, dx, dy);
+			}
+		} else if (r === 99 && dy === 1) {
+			if (c >= 50 && c < 100) {
+				return [100, c, 1]
+			} else {
+				debug("BAD STUFF", r, c, dx, dy);
+			}
+		} else if (r === 100 && dy === -1) {
+			if (c >= 0 && c < 50) {
+				return [50 + c, 50, 0]
+			} else if (c >= 50 && c < 100) {
+				return [99, c, 3]
+			} else {
+				debug("BAD STUFF", r, c, dx, dy);
+			}
+		} else if (r === 149 && dy === 1) {
+			if (c >= 0 && c < 50) {
+				return [150, c, 1]
+			} else if (c >= 50 && c < 100) {
+				return [150 + c - 50, 49, 2]
+			} else {
+				debug("BAD STUFF", r, c, dx, dy);
+			}
+		} else if (r === 150 && dy === -1) {
+			if (c >= 0 && c < 50) {
+				return [149, c, 3]
+			} else {
+				debug("BAD STUFF", r, c, dx, dy);
+			}
+		} else if (r === 199 && dy === 1) {
+			if (c >= 0 && c < 50) {
+				return [0, 100 + c, 1]
+			} else {
+				debug("BAD STUFF", r, c, dx, dy);
+			}
+		} else {
+			debug("BAD STUFF", r, c, dx, dy);
+			throw new Error();
+		}
+	} else if (dx) {
+		if (c === 0 && dx === -1) {
+			if (r >= 100 && r < 150) {
+				return [49 - (r - 100), 50, 0]
+			} else if (r >= 150 && r < 200) {
+				return [0, 50 + r - 150, 1]
+			} else {
+				debug("BAD STUFF", r, c, dx, dy);
+			}
+		} else if (c === 49 && dx === 1) {
+			if (r >= 100 && r < 150) {
+				return [r, 50, 0]
+			} else if (r >= 150 && r < 200) {
+				return [149, 50 + r - 150, 3]
+			} else {
+				debug("BAD STUFF", r, c, dx, dy);
+			}
+		} else if (c === 50 && dx === -1) {
+			if (r >= 0 && r < 50) {
+				return [100 + 49 - r, 0, 0]
+			} else if (r >= 50 && r < 100) {
+				return [100, r - 50, 1]
+			} else if (r >= 100 && r < 150) {
+				return [r, 49, 2]
+			} else {
+				debug("BAD STUFF", r, c, dx, dy);
+			}
+		} else if (c === 99 && dx === 1) {
+			if (r >= 0 && r < 50) {
+				return [r, 100, 0]
+			} else if (r >= 50 && r < 100) {
+				return [49, 100 + r - 50, 3]
+			} else if (r >= 100 && r < 150) {
+				return [49 - (r - 100), 149, 2]
+			} else {
+				debug("BAD STUFF", r, c, dx, dy);
+			}
+		} else if (c === 100 && dx === -1) {
+			if (r >= 0 && r < 50) {
+				return [r, 99, 2]
+			} else {
+				debug("BAD STUFF", r, c, dx, dy);
+			}
+		} else if (c === 149 && dx === 1) {
+			if (r >= 0 && r < 50) {
+				return [100 + 49 - r, 99, 2]
+			} else {
+				debug("BAD STUFF", r, c, dx, dy);
+			}
+		} else {
+			debug("BAD STUFF", r, c, dx, dy);
+		}
+	} else {
+		debug("BAD STUFF", r, c, dx, dy);
+	}
+}
+
+const moveCube = (G, r, c, dir, n) => {
+	let i = 0;
+	while (i < n) {
+		const [dy, dx] = D4[dir];
+		if (abs(mod(r, 50) - mod(r + dy, 50)) > 1 || abs(mod(c, 50) - mod(c + dx, 50)) > 1) {
+			let [nr, nc, nd] = wrapCube(G, r, c, dir);
+			if (G[nr][nc] === '#')
+				return [r, c, dir];
+			r = nr;
+			c = nc;
+			dir = nd;
+			++i;
+			continue
+		}
+		switch (G[r+dy][c+dx]) {
+			case '#': return [r, c, dir];
+			case '.': r += dy; c += dx; break;
+			case ' ': {
+				let [nr, nc, nd] = wrapCube(G, r, c, dir);
+				if (G[nr][nc] === '#')
+					return [r, c, dir];
+				r = nr;
+				c = nc;
+				dir = nd;
+			}
+		}
+		++i;
+	}
+	return [r, c, dir];
+}
+
+function part1(data, part) {
 	let [G, path] = groups(data)
 	path = path[0];
 	let mx = 0;
@@ -87,7 +238,10 @@ function part1(data) {
 	let i = 0, n, or;
 	while (i < path.length) {
 		[i, n] = getNum(path, i);
-		[r, c] = move(G, r, c, dir, n);
+		if (part === 1)
+			[r, c] = move(G, r, c, dir, n);
+		else
+			[r, c, dir] = moveCube(G, r, c, dir, n);
 		[i, or] = getOrientation(path, i);
 		if (or === 'R')
 			dir = mod(dir + 1, D4.length);
@@ -98,7 +252,7 @@ function part1(data) {
 
 	debug(res);
 	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
-	console.log("END OF PART1");
+	console.log("END OF PART" + part);
 	return;
 }
 
@@ -115,8 +269,8 @@ function part2(data) {
 function main() {
 	let data = fs.readFileSync("22_input").toString("utf-8");
 
-	part1(data);
-	part2(data);
+	part1(data, 1);
+	part1(data, 2);
 	process.exit(0);
 }
 
