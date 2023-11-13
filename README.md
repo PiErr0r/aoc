@@ -61,4 +61,7 @@ This script should be used *during* the day you want to solve the problem becaus
 [1, 25]
 
 ### 2021
-[1, 2]
+[1, 25]
+
+### 2022
+[1, 25]
