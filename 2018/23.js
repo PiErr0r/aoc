@@ -31,13 +31,14 @@ function part1(data) {
 			nano = [x, y, z, r];
 		}
 	});
+	debug(nano)
 	const [nx, ny, nz, nr] = nano;
 	iter(data, ([x, y, z, r]) => {
 		if (manDist([nx, ny, nz], [x, y, z]) <= nr) ++res;
 	})
 
 	debug(res);
-	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
+	// exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART1");
 	return;
 }
@@ -80,7 +81,53 @@ function part2(data) {
 	let res1 = manDist([xavg, yavg, zavg], [0,0,0])
 	let res2 = manDist([xmed, ymed, zmed], [0,0,0])
 
-	debug(res, res1, res2);
+	let ss = 70891344 ;
+	let cnt = cnt2 = 0;
+	[xavg, yavg, zavg] = [24680964,27498000,18708876] 
+	avg = 945
+	let save = [xavg, yavg, zavg];
+	let step = 10;
+	while (step > 1) {
+		const dx = (randint(2) ? 1 : -1) * randint(step);
+		xavg += dx;
+		const dy = (randint(2) ? 1 : -1) * randint(step);
+		yavg += dy;
+		const dz = (randint(2) ? 1 : -1) * randint(step);
+		zavg += dz;
+
+		let nn = 0;
+		iter(data, ([x, y, z, r]) => {
+			if (manDist([xavg, yavg, zavg], [x, y, z]) <= r) ++nn;
+		})	
+		if (nn > avg) {
+			avg = nn;
+			ss = manDist([xavg, yavg, zavg], [0,0,0]);
+			save = [xavg, yavg, zavg];
+		} else if (nn === avg) {
+			if (manDist([xavg, yavg, zavg], [0,0,0]) < ss) {
+				ss = manDist([xavg, yavg, zavg], [0,0,0]);
+				save = [xavg, yavg, zavg];
+			}
+		}
+		++cnt;
+		if (cnt % 10000 === 0) {
+			debug(avg, ss, cnt, save);
+			[xavg, yavg, zavg] = save
+		}
+
+		if (cnt % 400000 === 0) {
+			++cnt2;
+			// step -= floor(step/100)
+			if (cnt2 === 10)
+				step = 2
+			else if (cnt2 === 12)
+				step = floor(step/10)
+			debug("RESET", cnt2, step, save);
+			[xavg, yavg, zavg] = save
+		}
+	}
+	res = ss;
+	debug(res);
 	// exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART2");
 	return;
