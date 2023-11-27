@@ -23,15 +23,15 @@ class IntCode {
 		this.regs = {};
 
 		this.fnc = {
-			"01": (x) => this.add(			...this.getMode(x, 3)),
-			"02": (x) => this.mul(			...this.getMode(x, 3)),
-			"03": (x) => this.input(		...this.getMode(x, 1)),
-			"04": (x) => this.output(		...this.getMode(x, 1)),
-			"05": (x) => this.jnz(			...this.getMode(x, 2)),
-			"06": (x) => this.jz(				...this.getMode(x, 2)),
-			"07": (x) => this.lt(				...this.getMode(x, 3)),
-			"08": (x) => this.eq(				...this.getMode(x, 3)),
-			"09": (x) => this.relBase(	...this.getMode(x, 1)),
+			"01": (x) => this.add(    ...this.getMode(x, 3)),
+			"02": (x) => this.mul(    ...this.getMode(x, 3)),
+			"03": (x) => this.input(  ...this.getMode(x, 1)),
+			"04": (x) => this.output( ...this.getMode(x, 1)),
+			"05": (x) => this.jnz(    ...this.getMode(x, 2)),
+			"06": (x) => this.jz(     ...this.getMode(x, 2)),
+			"07": (x) => this.lt(     ...this.getMode(x, 3)),
+			"08": (x) => this.eq(     ...this.getMode(x, 3)),
+			"09": (x) => this.relBase(...this.getMode(x, 1)),
 			"99": (x) => this.halt()
 		}
 	}
@@ -71,10 +71,10 @@ class IntCode {
 	getMode(n, retN) {
 		const ns = padNum(n, 5);
 		return ns
-			.split('')						// get array
-			.slice(0, 3)					// first 3 items
-			.reverse()						// reverse
-			.slice(0, retN)				// first retN items
+			.split('')            // get array
+			.slice(0, 3)          // first 3 items
+			.reverse()            // reverse
+			.slice(0, retN)       // first retN items
 			.map(a => Number(a)); // map to int
 	}
 

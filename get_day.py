@@ -70,7 +70,7 @@ const {{ combinations, combinations_with_replacement, next_permutation, product 
 
 function part1(data) {{
 
-	let res;
+	let res = 0;
 
 	debug(res);
 	exec(`echo ${{res}} | xclip -sel clip -rmlastnl`);
@@ -80,7 +80,7 @@ function part1(data) {{
 
 function part2(data) {{
 
-	let res;
+	let res = 0;
 
 	debug(res);
 	// exec(`echo ${{res}} | xclip -sel clip -rmlastnl`);
