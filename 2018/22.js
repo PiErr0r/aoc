@@ -87,7 +87,7 @@ const allowed = (G, [x, y], [dx, dy], eq) => eq !== (G[x+dx][y+dy] % 3);
 const fn = ([x1, y1], [x2, y2]) => abs(x1 - x2) + abs(y1 - y2);
 
 const A_star = (G, depth, [tx, ty]) => {
-	const Q = new PriorityQueue([], (a, b) => a[2] - b[2]);
+	const Q = new PriorityQueue((a, b) => b[2] - a[2]);
 	let mn = MOD;
 	const visited = new set();
 	Q.push([0, 0, 0, 1, 0]);

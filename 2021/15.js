@@ -46,7 +46,8 @@ function part2(data, part) {
 	const f = data.length, s = data[0].length;
 	const fm = f * mul, sm = s * mul;
 	const getRisk = (y, x) => (data[y%f][x%s]-1 + floor(y/f) + floor(x/s)) % 9 + 1;
-	const q = new PriorityQueue([[0,0,0]], (a, b) => a[2] - b[2]);
+	const q = new PriorityQueue((a, b) => a[2] - b[2]);
+	q.push([0,0,0])
 	const S = new set([[0,0]]);
 
 	while (true) {
