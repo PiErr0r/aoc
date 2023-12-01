@@ -4,3 +4,4 @@ fetch_day_time
 OLD*
 tmp/
 /**/response
+.vscode
