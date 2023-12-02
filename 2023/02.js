@@ -15,25 +15,25 @@ const { isSuperset, or, and, xor, sub } = set;
 const { getExecStr } = require("../lib/post");
 const { combinations, combinations_with_replacement, next_permutation, product } = require("../lib");
 
- const strs = ["one", 
- "two", 
- "three", 
- "four", 
- "five", 
- "six", 
- "seven", 
- "eight", 
- "nine"];
- const digs = '0123456789';
+const O = { r: 12, g: 13, b: 14 };
 
 function part1(data) {
-
+	// 163 place
 	let res = 0;
 	data = lines(data);
-	
 	iter(data, line => {
-		const nums = digits(line);
-		res += nums[0] * 10 + nums[nums.length - 1]
+		const [g, moves] = line.split(':');
+		const id = int(g.split(' ')[1])
+		let couldBe = true;
+		iter(moves.split(';'), move => {
+			const cp = Object.assign({}, O);
+			iter(move.split(',').map(a => a.trim()), m => {
+				const [n, col] = m.split(' ');
+				cp[col[0]] -= int(n);
+			})
+			if (cp.r < 0 || cp.g < 0 || cp.b < 0) couldBe = false;
+		})
+		if (couldBe) res += id;
 	})
 
 	debug(res);
@@ -43,26 +43,20 @@ function part1(data) {
 }
 
 function part2(data) {
-
+	// 167 place
 	let res = 0;
 	data = lines(data);
-	iter(data, l => {
-		let i = 0;
-		let fst = null, lst = null;
-		while (i < l.length) {
-			if (in_(l[i], digs)) {
-				lst = int(l[i]);
-			}
-			iter(strs, (s, j) => {
-				if (l.slice(i).startsWith(s)) {
-					lst = j + 1;
-					return true;
-				}
+	iter(data, line => {
+		const [g, moves] = line.split(':');
+		const id = int(g.split(' ')[1])
+		const cp = { r: 0, g: 0, b: 0 };
+		iter(moves.split(';'), move => {
+			iter(move.split(',').map(a => a.trim()), m => {
+				const [n, col] = m.split(' ');
+				cp[col[0]] = max(cp[col[0]], int(n));
 			})
-			if (fst === null) fst = lst;
-			++i;
-		}
-		res += 10 * fst + lst
+		})
+		res += cp.r * cp.g * cp.b
 	})
 
 	debug(res);
@@ -72,7 +66,7 @@ function part2(data) {
 }
 
 function main() {
-	let data = fs.readFileSync("01_input").toString("utf-8");
+	let data = fs.readFileSync("02_input").toString("utf-8");
 
 	part1(data);
 	part2(data);
