@@ -73,7 +73,7 @@ function part1(data) {{
 	let res = 0;
 
 	debug(res);
-	exec(`echo ${{res}} | xclip -sel clip -rmlastnl`);
+	if (res) exec(`echo ${{res}} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART1");
 	return;
 }}
@@ -83,7 +83,7 @@ function part2(data) {{
 	let res = 0;
 
 	debug(res);
-	// exec(`echo ${{res}} | xclip -sel clip -rmlastnl`);
+	if (res) exec(`echo ${{res}} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART2");
 	return;
 }}

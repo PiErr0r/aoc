@@ -23,9 +23,9 @@ function part1(data) {
 	iter(data, game => {
 		const [card, deal] = game.split(': ');
 		const [win, my] = deal.split('|').map(c => new set(ints(c)));
-		const len = and(win, my);
-		if (len.size)
-			res += 1 << (len.size - 1);
+		const len = and(win, my).size;
+		if (len)
+			res += 1 << (len - 1);
 	})
 
 	debug(res);
@@ -41,12 +41,11 @@ function part2(data) {
 	let pts = empty(data.length).map(_ => 1);
 	iter(data, game => {
 		const [card, deal] = game.split(': ');
-		const tmp = card.split(' ');
-		const cc = int(tmp[tmp.length - 1]);
+		const cc = int(card.split(' ').pop());
 		const [win, my] = deal.split('|').map(c => new set(ints(c)));
-		const len = and(win, my);
-		if (len.size) {
-			range(cc, cc + len.size)(i => {
+		const len = and(win, my).size;
+		if (len) {
+			range(cc, cc + len)(i => {
 				pts[i] += pts[cc - 1];
 			})
 		}
