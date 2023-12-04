@@ -15,38 +15,17 @@ const { isSuperset, or, and, xor, sub } = set;
 const { getExecStr } = require("../lib/post");
 const { combinations, combinations_with_replacement, next_permutation, product } = require("../lib");
 
-const digs = '0123456789';
-
-const findNum = (data, y, x) => {
-	let l = x;
-	while (x < data[0].length && in_(data[y][x], digs)) ++x;
-	let r = x;
-	const num = int(data[y].slice(l, r).join(''))
-	range(l, r)(i => (data[y][i] = '.', 0))
-
-	if (inBB(y, l-1, data) && data[y][l-1] !== '.' || inBB(y, r, data) && data[y][r] !== '.' ) {
-		return num;
-	}
-	let isNum = false;
-	range(l - 1, r + 1)(i => {
-		if (inBB(y - 1, i, data) && !in_(data[y-1][i], digs) && data[y-1][i] !== '.') isNum = true;
-		if (inBB(y + 1, i, data) && !in_(data[y+1][i], digs) && data[y+1][i] !== '.') isNum = true;
-		return isNum;
-	})
-	if (isNum) return num;
-	return 0;
-}
-
 function part1(data) {
 
 	let res = 0;
-	data = table(data);
-	range(data.length)( y => {
-		range(data[0].length)( x => {
-			if (in_(data[y][x], digs)) {
-				res += findNum(data, y, x);
-			}
-		})
+	data = lines(data);
+
+	iter(data, game => {
+		const [card, deal] = game.split(': ');
+		const [win, my] = deal.split('|').map(c => new set(ints(c)));
+		const len = and(win, my);
+		if (len.size)
+			res += 1 << (len.size - 1);
 	})
 
 	debug(res);
@@ -55,39 +34,24 @@ function part1(data) {
 	return;
 }
 
-const getNum = (data, y, x) => {
-	while (in_(data[y][x], digs)) --x;
-	++x;
-	let l = x;
-	while (in_(data[y][x], digs)) ++x;
-	return int(data[y].slice(l, x).join(''));
-}
-
-const findGear = (data, y, x) => {
-	let nums = [];
-	iter(D8, ([dy, dx]) => {
-		if (inBB(y+dy, x+dx, data) && in_(data[y+dy][x+dx], digs)) {
-			nums.push(getNum(data, y+dy, x+dx));
-		}
-	})
-	// assume there is no gear with same numbers
-	nums = [...new set(nums)]
-	if (nums.length === 2) return prod(nums);
-	return 0;
-}
-
 function part2(data) {
 
 	let res = 0;
-	data = table(data);
-
-	range(data.length)( y => {
-		range(data[0].length)( x => {
-			if (data[y][x] === '*') {
-				res += findGear(data, y, x);
-			}
-		})
+	data = lines(data);
+	let pts = empty(data.length).map(_ => 1);
+	iter(data, game => {
+		const [card, deal] = game.split(': ');
+		const tmp = card.split(' ');
+		const cc = int(tmp[tmp.length - 1]);
+		const [win, my] = deal.split('|').map(c => new set(ints(c)));
+		const len = and(win, my);
+		if (len.size) {
+			range(cc, cc + len.size)(i => {
+				pts[i] += pts[cc - 1];
+			})
+		}
 	})
+	res = sum(pts);
 
 	debug(res);
 	exec(`echo ${res} | xclip -sel clip -rmlastnl`);
@@ -96,7 +60,7 @@ function part2(data) {
 }
 
 function main() {
-	let data = fs.readFileSync("03_input").toString("utf-8");
+	let data = fs.readFileSync("04_input").toString("utf-8");
 
 	part1(data);
 	part2(data);
