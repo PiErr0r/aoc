@@ -5,3 +5,5 @@ OLD*
 tmp/
 /**/response
 .vscode
+*/*_day
+*/*_input
