@@ -95,12 +95,9 @@ function part2(data) {
 	let res = 0;
 
 	[seeds, ...data] = groups(data);
-	// debug(seeds)
 	seeds = ints(seeds[0])
-
 	res = MOD * 1000;
 
-	// iter(seeds, s => {
 	range(0, seeds.length, 2)(i => {
 		let tmp = dataMapRange(seeds[i], seeds[i+1], data);
 		res = min(tmp, res);
