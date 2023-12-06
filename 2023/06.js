@@ -15,7 +15,7 @@ const { isSuperset, or, and, xor, sub } = set;
 const { getExecStr } = require("../lib/post");
 const { combinations, combinations_with_replacement, next_permutation, product } = require("../lib");
 
-const calcTimes = (t, d) => {
+const calcTimes = (t, d) => { // bruteforce
 	let res = 0;
 	range(t)(i => {
 		if ((t - i) * (i) > (d)) ++res;
@@ -23,12 +23,20 @@ const calcTimes = (t, d) => {
 	return res;
 }
 
+const quadratic = (t, d) => {
+	// eq: -x*x + t*x - d > 0
+	const D = t*t - 4 * d;
+	const x1 = (-t + sqrt(D)) / -2;
+	const x2 = (-t - sqrt(D)) / -2;
+	return floor(max(x1, x2)) - floor(min(x1, x2));
+}
+
 function part1(data) {
 
 	let res = 1;
 	const [t, d] = lines(data).map(a => ints(a));
 	range(t.length)(i => {
-		res *= calcTimes(t[i], d[i]);
+		res *= quadratic(t[i], d[i]);
 	})
 
 	debug(res);
@@ -42,7 +50,8 @@ function part2(data) {
 	let res = 1;
 	const [t, d] = lines(data).map(a => ints(a)).map(a => a.join('')).map(a => int(a));
 
-	res = calcTimes(t, d)
+	// res = calcTimes(t, d)
+	res = quadratic(t, d)
 
 	debug(res);
 	if (res) exec(`echo ${res} | xclip -sel clip -rmlastnl`);
