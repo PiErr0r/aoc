@@ -79,6 +79,12 @@ function part1(data) {
 }
 
 const getPossible = (c) => {
+	if (count(c, 'J') === 5) return ['AAAAA'];
+	if (count(c, 'J') === 4) return [empty(5).fill(c.replace(/J/, ''))];
+	if (count(c, 'J') === 3) {
+		c = c.replace(/J/, '');
+		return c[0] === c[1] ? ['AAAAA'] : ['AAAAK']
+	}
 	c = c.split('');
 	let res = [''];
 	iter(c, cc => {
