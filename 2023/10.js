@@ -91,15 +91,6 @@ const countIn = (data) => {
 	return cnt;
 }
 
-const inPath = (y, x, path) => {
-	let res = false;
-	iter(path, ([py, px]) => {
-		if (py === y && px === x) res = true;
-		return res;
-	})
-	return res;
-}
-
 const bfs = (data, y, x, path) => {
 	const q = new Queue();
 	q.push([y, x]);
@@ -108,7 +99,7 @@ const bfs = (data, y, x, path) => {
 		if (data[yy][xx] === 'I') continue;
 		data[yy][xx] = 'I';
 		iter(D4, ([dy, dx]) => {
-			if (inBB(yy+dy, xx+dx, data) && !inPath(yy+dy, xx+dx, path)) {
+			if (inBB(yy+dy, xx+dx, data) && !path.has([yy+dy, xx+dx])) {
 				q.push([yy+dy, xx+dx]);
 			}
 		})
@@ -116,6 +107,7 @@ const bfs = (data, y, x, path) => {
 }
 
 const mark = (path, data) => {
+	const P = new set(path.map(([yy, xx, ..._]) => [yy, xx]))
 	iter(path, ([y, x, _y, _x], i) => {
 		const iters = [];
 		let [_1, _2, dy, dx] = path[i || data.length - 1];
@@ -162,11 +154,19 @@ const mark = (path, data) => {
 		    // case ".": iters.push([0, -1]); break;
 		}
 		iter(iters, ([ny, nx]) => {
-			if (inBB(y + ny, x + nx, data) && !inPath(y + ny, x + nx, path)) {
-				bfs(data, y+ny, x+nx, path);
+			if (inBB(y + ny, x + nx, data) && !P.has([y+ny, x+nx])) {
+				bfs(data, y+ny, x+nx, P);
 			}
 		})
 	})
+}
+
+const shoelace = (path) => {
+	let res = 0;
+	range(path.length)(i => {
+		res += path[i][0] * path[(i || path.length) - 1][1] - path[i][1] * path[(i || path.length) - 1][0];
+	})
+	return abs(res) >> 1;
 }
 
 function part2(data) {
@@ -188,8 +188,10 @@ function part2(data) {
 	const cp = copy(data);
 	let [len, path] = dfs(sx, sy, cp);
 
-	mark(path, cp);
+	// better solution
+	res = shoelace(path) - (len >> 1) + 1
 
+	mark(path, cp);
 	res =  countIn(cp)
 	debug(res);
 	if (res) exec(`echo ${res} | xclip -sel clip -rmlastnl`);
