@@ -15,7 +15,9 @@ const { isSuperset, or, and, xor, sub } = set;
 const { getExecStr } = require("../lib/post");
 const { combinations, combinations_with_replacement, next_permutation, product } = require("../lib");
 
+let MEMO = {};
 const possible = (src, goal, si = 0, gi = 0) => {
+	if (MEMO[[si, gi]] !== undefined) return MEMO[[si, gi]];
 	let ss = si;
 	let mm = si, sit = si;
 	while (si < src.length && src[si] === '.') {
@@ -36,10 +38,15 @@ const possible = (src, goal, si = 0, gi = 0) => {
 	let res = 0;
 	if (cnt === goal[gi] && (si === src.length || src[si] !== '#')) {
 		let tmp = possible(src, goal, si + 1, gi + 1);
+		MEMO[[si+1, gi+1]] = tmp;
 		res += tmp
 	}
-	if (src[mm] !== '#')
-		res += possible(src, goal, mm + 1, gi);
+	if (src[mm] !== '#') {
+		let tmp = possible(src, goal, mm + 1, gi);
+		MEMO[[mm+1, gi]] = tmp;
+		res += tmp;
+	}
+	MEMO[[ss, gi]] = res;
 	return res;
 }
 
@@ -50,8 +57,8 @@ function part1(data) {
 	iter(data, line => {
 		let [src, goal] = line.split(' ');
 		goal = ints(goal);
-		let tmp = possible(src, goal)
-		// debug('---------------------------------', src, goal, tmp)
+		MEMO = {};
+		let tmp = possible(src, goal);
 		let i = 0;
 		res += tmp;
 	})
@@ -67,29 +74,20 @@ function part2(data) {
 
 	let res = 0;
 	data = lines(data);
-	let isBad = false
-	iter(data, line => {
-		let [src, goal] = line.split(' ');
-		goal = ints(goal);
-		let tmp1 = possible(src, goal)
-		// src = '?' + src + '?';
-		let i = 0;
-		// if (!match(src, goal)) {
-		// 	debug(src)
-		// }
-
-		let asd = (src.at(-1) === '#' ? '' : '?') + src ;//+ src.slice(0, 5);
-		let tmp3 = possible(asd, goal)
-		src = (src.at(-1) === '#' ? '' : '?') + src + src.slice(0, 1);
-		// while (i < src.length && src[i] === '?') src += src[i++];
-		let tmp2 = possible(src, goal)
-		if (tmp2 !== tmp3) debug(asd, tmp2, tmp3)
-		if (tmp2 === 0) isBad = true;
-		debug('---------------------------------', src, goal, tmp1 * tmp2 * tmp2 * tmp2 * tmp2)
-		res += tmp1 * tmp2 * tmp2 * tmp2 * tmp2;
+	iter(data, (line, i) => {
+		let [osrc, ogoal] = line.split(' ');
+		let src = [], goal = [];
+		range(5)(_ => {
+			src.push(osrc);
+			goal.push(ogoal);
+		})
+		src = src.join('?');
+		goal = ints(goal.join(','));
+		MEMO = {};
+		let tmp = possible(src, goal)
+		res += tmp;
 	})
-	debug("BAD!!!", isBad)
-	// 6720660274964 - memoize
+
 	debug(res);
 	if (res) exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART2");
