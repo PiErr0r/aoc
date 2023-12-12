@@ -66,11 +66,10 @@ function part1(data) {
 	return;
 }
 
-function part2(data) {
+function part2(data, E) {
 
 	let res = 0;
 	const coords = [];
-	const E = 1000000;
 	data = table(data);
 	iter(data, (r, y) => {
 		iter(r, (c, x) => {
@@ -81,12 +80,14 @@ function part2(data) {
 	
 	const [rows, cols] = getEmpty(data);
 	range(coords.length)(i => {
+		const [yi, xi] = coords[i];
 		range(i + 1, coords.length)(j => {
+			const [yj, xj] = coords[j];
 			let rc = 0, cc = 0;
-			const mny = min(coords[i][0], coords[j][0])
-			const mxy = max(coords[i][0], coords[j][0])
-			const mnx = min(coords[i][1], coords[j][1])
-			const mxx = max(coords[i][1], coords[j][1])
+			const mny = min(yi, yj)
+			const mxy = max(yi, yj)
+			const mnx = min(xi, xj)
+			const mxx = max(xi, xj)
 			iter(rows, r => {
 				if (r > mny && r < mxy) ++rc;
 			})
@@ -100,15 +101,16 @@ function part2(data) {
 
 	debug(res);
 	if (res) exec(`echo ${res} | xclip -sel clip -rmlastnl`);
-	console.log("END OF PART2");
+	console.log("END OF PART", E === 2 ? '1' : '2');
 	return;
 }
 
 function main() {
 	let data = fs.readFileSync("11_input").toString("utf-8");
 
-	part1(data);
-	part2(data);
+	// part1(data);
+	part2(data, 2);
+	part2(data, 1000000);
 	process.exit(0);
 }
 
