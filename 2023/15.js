@@ -20,10 +20,22 @@ const hash = (data) => {
 	let res = 0;
 	iter(data, c => {
 		res += ord(c);
-		res *= 17;
-		res %= 256;
+		res = (res * 17) % 256
 	})
 	return res;
+}
+
+// precomputed table and fast hashing
+const T = empty(16);
+range(1, 16)(i => {
+	T[i] = modPow(17, i, 256);
+});
+const hash2 = (data) => {
+	let res = 0;
+	range(data.length)(i => {
+		res = (res +  ord(data[i]) * T[(data.length - i) & 0xF]) & 0xFF;
+	})
+	return res & 0xFF;
 }
 
 function part1(data) {
@@ -31,7 +43,7 @@ function part1(data) {
 	let res = 0;
 	data = data.split(',');
 	iter(data, s => {
-		res += hash(s)
+		res += hash2(s)
 	})
 
 	debug(res);
@@ -55,9 +67,9 @@ function part2(data) {
 			op = '=';
 		}
 		if (op === '-') {
-			delete B[hash(ss)][ss];
+			delete B[hash2(ss)][ss];
 		} else {
-			B[hash(ss)][ss] = int(num);
+			B[hash2(ss)][ss] = int(num);
 		}
 	})
 
