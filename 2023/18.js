@@ -14,6 +14,7 @@ const { min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, 
 const { isSuperset, or, and, xor, sub } = set;
 const { getExecStr } = require("../lib/post");
 const { combinations, combinations_with_replacement, next_permutation, product } = require("../lib");
+const { areaInteger } = require('../lib')
 
 const DIRS = {
 	'U': [-1, 0],
@@ -53,10 +54,6 @@ const decode = (s) => {
 	return [dir, num(n, 16)]
 }
 
-const raytrace = (coords) => {
-	debug(coords)
-}
-
 const getLine = (coords) => {
 	let len = 0;
 	let prev = coords[coords.length - 1];
@@ -83,7 +80,7 @@ function part2(data) {
 		coords.push([cy, cx]);
 	});
 	const line = getLine(coords);
-	res = shoelace(coords) + line / 2 + 1;
+	res = areaInteger(coords)// shoelace(coords) + line / 2 + 1;
 
 	debug(res);
 	if (res) exec(`echo ${res} | xclip -sel clip -rmlastnl`);
