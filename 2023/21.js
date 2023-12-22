@@ -69,7 +69,7 @@ function part1(data) {
 	});
 
 	let G = [];
-	let S = 51;
+	let S = 5;
 	range(S)(y => {
 		iter(data, (r, yy) => {
 			G.push([]);
@@ -88,7 +88,7 @@ function part1(data) {
 	let y1 = bfs(G, 65 + 131, [sy, sx]);
 	let y2 = bfs(G, 65 + 131 + 131, [sy, sx]);
 	debug(`y0, y1, y2 = ${y0}, ${y1}, ${y2}\nx0, x1, x2 = 65, 65 + 131, 65 + 131 + 131`)
-	*/	
+	*/
 
 	debug(res);
 	if (res) exec(`echo ${res} | xclip -sel clip -rmlastnl`);
