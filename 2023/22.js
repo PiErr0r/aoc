@@ -20,10 +20,14 @@ const intersect = ([x1, y1], [x2, y2]) => {
 	return x1 < y2 && x2 < y1;
 }
 
-const countFalls = (ii, data) => {
+const countFalls = (ii, data, parents) => {
 	let res = 0;
+	let shouldCheck = new set();
+	iter(parents[ii], p => {
+		shouldCheck.add(p);
+	})
 	iter(data, ([x0, y0, z0, x1, y1, z1], i) => {
-		if (z0 === 1 || i === ii) return;
+		if (z0 === 1 || i === ii || !shouldCheck.has(i)) return;
 		let top = -1;
 		const j = i;
 		while (i > 0) {
@@ -31,13 +35,17 @@ const countFalls = (ii, data) => {
 			if (i === ii) continue;
 			const [nx0, ny0, nz0, nx1, ny1, nz1] = data[i];
 			if (z0 < nz1) continue;
-			if (top !== -1 && top <= nz0) continue;
 			if (intersect([x0, x1], [nx0, nx1]) && intersect([y0, y1], [ny0, ny1])) {
 				top = max(top, nz1);
 			}
 		}
 		if (top === -1) top = 1;
-		if (top !== z0) ++res;
+		if (top !== z0) {
+			++res;
+			iter(parents[j], p => {
+				shouldCheck.add(p);
+			})
+		}
 		data[j] = [x0, y0, top, x1, y1, top + z1 - z0];
 	});
 	return res;
@@ -93,7 +101,7 @@ function part1(data) {
 	})
 	let res2 = 0;
 	iter(disintegrated, (can, i) => {
-		if (can) res2 += countFalls(i, copy(data));
+		if (can) res2 += countFalls(i, copy(data), parents);
 	})
 
 	debug(res);
