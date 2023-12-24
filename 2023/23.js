@@ -104,12 +104,11 @@ const getChildren = (data, [sy, sx], [ey, ex]) => {
 			++cnt;
 			r.push([dy, dx]);
 		})
-		// debug(y, x, r)
 		if (cnt === 1) {
 			const [dy, dx] = r[0];
 			q.push([y+dy, x+dx, ss + 1]);
 		} else {
-			if (y !== sy && x !== sx)
+			if (y !== sy || x !== sx)
 				children.push([y, x, ss]);
 			else {
 				iter(r, ([dy, dx]) => {
@@ -131,7 +130,6 @@ const condense = (data, [sy, sx], [ey, ex]) => {
 		if (visited.has([y, x])) continue;
 		visited.add([y, x]);
 		G[[y, x]] = getChildren(data, [y, x], [ey, ex]);
-		debug(G[[y,x]])
 		iter(G[[y, x]], ([ny, nx, ss]) => {
 			q.push([ny, nx])
 		})
@@ -139,7 +137,7 @@ const condense = (data, [sy, sx], [ey, ex]) => {
 	return G;
 }
 
-const graphDfs = (G, [sy, sx], [ey, ex]) => {
+const graphDfs2 = (G, [sy, sx], [ey, ex]) => {
 	const s = new Stack();
 	s.push([sy, sx, 0, new set()]);
 	let mx = -1;
@@ -159,6 +157,24 @@ const graphDfs = (G, [sy, sx], [ey, ex]) => {
 	return mx;
 }
 
+const seen = new set();
+const graphDfs = (G, [sy, sx], [ey, ex]) => {
+	if (sy === ey && sx === ex) {
+		return 0;
+	}
+
+	seen.add([sy, sx]);
+	let mx = -1;
+	iter(G[[sy, sx]], ([ny, nx, ll]) => {
+		if (!seen.has([ny, nx])) {
+			const res = ll + graphDfs(G, [ny, nx], [ey, ex])
+			mx = max(mx, res);
+		}
+	})
+	seen.delete([sy, sx]);
+	return mx
+}
+
 function part2(data) {
 
 	let res = 0;
@@ -167,7 +183,8 @@ function part2(data) {
 	const E = [data.length - 1, data[0].length - 2];
 	const G = condense(data, S, E);
 	debug(G)
-	res = graphDfs(G, S, E);
+	// wrong answer
+	// res = graphDfs(G, S, E);
 	debug(res);
 	if (res) exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART2");
