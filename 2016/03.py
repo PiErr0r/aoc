@@ -40,7 +40,7 @@ def part_2(data):
 
 
 if __name__ == '__main__':
-	with open('3_input') as f:
+	with open('03_input') as f:
 		data = f.read()
 		data1 = data.split('\n')
 		data2 = list(map(int, data.split()))

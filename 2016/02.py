@@ -72,7 +72,7 @@ def part_2(data):
 
 
 if __name__ == '__main__':
-	with open('2_input') as f:
+	with open('02_input') as f:
 		data = f.read()
 		data = data.split('\n')
 		# data = list(map(int, data.split()))
