@@ -1,0 +1,41 @@
+south
+west
+take asterisk
+east
+take boulder
+east
+take food ration
+west
+north
+east
+take candy cane
+north
+north
+take mutex
+north
+take prime number
+south
+south
+east
+north
+take mug
+south
+west
+south
+east
+east
+south
+east
+east
+drop asterisk
+drop boulder
+drop food ration
+drop candy cane
+drop mutex
+drop prime number
+drop mug
+take asterisk
+take mutex
+take prime number
+take mug
+north
