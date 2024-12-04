@@ -54,7 +54,7 @@ if __name__ == '__main__':
 program_text_js = """
 const fs = require('fs');
 const {{ exec }} = require("child_process");
-const {{ ALPHA_L, ALPHA_U, D4, D6, D8, MOD }} = require("../lib");
+const {{ ALPHA_L, ALPHA_U, NUMS, D4, D6, D8, MOD }} = require("../lib");
 const {{ joseph, findCycle }} = require("../lib");
 const {{ cache }} = require("../lib");
 const {{ bin, float, hex, int, num, oct }} = require("../lib");
