@@ -77,6 +77,7 @@ function part2(data, R, resFirst) {
 					s += BigInt(other[j + 1]);
 				else if (i[j] === '2')
 					s *= BigInt(other[j + 1]);
+				if (s > result) return true;
 			})
 			++combs;
 			if (result === s) {
