@@ -37,7 +37,6 @@ function part1(data) {
 			const [dy, dx] = [y2 - y1, x2 - x1];
 			if (inBB(y2 + dy, x2 + dx, data)) {
 				freq.add([y2+dy, x2+dx]);
-				data[y2+dy][x2+dx] = '#';
 			}
 		})
 	})
@@ -65,21 +64,13 @@ function part2(data) {
 
 	const freq = new set();
 	iter(keys(antenna), k => {
-		if (antenna[k].size > 1) {
-			iter(antenna[k], ([y, x]) => {
-				freq.add([y, x]);
-			}) 
-		}
 		diter(antenna[k], ([y1, x1], [y2, x2]) => {
 			if (y2 === y1 && x2 === x1) return;
-			const [ddy, ddx] = [y2 - y1, x2 - x1];
-			let [dy, dx] = [ddy, ddx]
-			while (inBB(y2 + dy, x2 + dx, data)) {
-				freq.add([y2+dy, x2+dx]);
-				if (data[y2+dy][x2+dx] === '.')
-					data[y2+dy][x2+dx] = '#';
-				dy += ddy;
-				dx += ddx;
+			const [dy, dx] = [y2 - y1, x2 - x1];
+			let i = 0;
+			while (inBB(y1 + i*dy, x1 + i*dx, data)) {
+				freq.add([y1+i*dy, x1+i*dx]);
+				++i;
 			}
 		})
 	})
