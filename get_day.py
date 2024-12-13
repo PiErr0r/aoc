@@ -67,7 +67,7 @@ const {{ digits, ints,	floats,	singles,	words,	lines,	table,	groups,	getGroups,	
 const {{ min, max, random, abs, ceil, floor, log, log10, log2, round, sign, sin, cos, tan, asin, acos, atan, atan2, sqrt, PI }} = Math;
 const {{ disjoint, isSubset, isSuperset, or, and, xor, sub }} = set;
 const {{ getExecStr }} = require("../lib/post");
-const {{ combinations, combinations_with_replacement, next_permutation, product }} = require("../lib");
+const {{ combinations, combinations_with_replacement, next_permutation, product, unique_permutations }} = require("../lib");
 
 function part1(data) {{
 
