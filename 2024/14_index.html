@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>test</title>
+</head>
+<body>
+<div>
+	<button onclick="">--Change src</button>
+	<button onclick="">--rgb</button>
+</div>
+<div id="counter">
+</div>
+<canvas id="board"></canvas>
+</body>
+
+<script type="text/javascript">
+
+const mod = (a, n) => ((a % n) + n) % n;
+
+var directory = './14_input_parsed';
+var xmlHttp = new XMLHttpRequest();
+xmlHttp.open('GET', directory, false); // false for synchronous request
+xmlHttp.send(null);
+var data = xmlHttp.responseText
+	.split("\n")
+	.map(r => r
+		.split(',')
+		.map(n => parseInt(n, 10)));
+
+const canvas = document.getElementById('board');
+const W = 101;
+const H = 103;
+const MUL = 4;
+
+var ctx = null;
+var INT = null;
+var _ = 6870;
+
+const onStart = () => {
+	canvas.width = MUL * W;
+	canvas.height = MUL * H 
+	
+	ctx = canvas.getContext('2d');
+}
+
+const render = () => {
+	ctx.clearRect(0, 0, MUL*W, MUL*H);	
+	for (let i = 0; i < data.length; ++i) {
+		const X = mod(data[i][0] + _ * data[i][2], W);
+		const Y = mod(data[i][1] + _ * data[i][3], H);
+		ctx.fillRect(MUL*X, MUL*Y, MUL, MUL);
+	}
+	++_;
+	const cnt = document.getElementById('counter');
+	cnt.innerHTML = `Counter: ${_}`;
+}
+window.onload = function () {
+	onStart();
+}
+
+window.onkeydown = (evt) => {
+	console.log(evt.key)
+	if (evt.key === ' ') {
+		if (INT === null) {
+			INT = setInterval(() => render(), 300); 
+		} else {
+			clearInterval(INT);
+			INT = null;
+		}
+	}
+	if (evt.key === 'ArrowLeft') --_;
+	if (evt.key === 'ArrowRight') ++_;
+}
+
+</script>
+</html>
