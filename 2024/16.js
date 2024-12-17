@@ -30,15 +30,15 @@ const L = i => mod(i - 1, 4);
 const dijkstra = (G, sy, sx, ey, ex) => {
 	const q = new PriorityQueue((a, b) => (a[3] - b[3]));
 	q.push([sy, sx, 1, 0, `${sy},${sx}`]) // y x sD_index score path
-	const seen = {};
+	const seen = new Map();
 	let mn = MOD;
 	const paths = new set();
 	while (!q.empty()) {
 		const [y, x, d, score, path] = q.pop();
 		if (score > mn) continue;
-		if (seen[[y, x, d]] && seen[[y, x, d]] < score) continue;
-
-		seen[[y, x, d]] = score;
+		const S = [y, x, d].join(',');
+		if (seen.has(S) && seen.get(S) < score) continue;
+		seen.set(S, score);
 		if (y === ey && x === ex) {
 			if (score < mn) {
 				paths.clear();
@@ -54,8 +54,14 @@ const dijkstra = (G, sy, sx, ey, ex) => {
 		if (inBB(y+dy, x+dx, G) && G[y+dy][x+dx] === '.') {
 			q.push([y+dy, x+dx, d, score + 1, path + `-${y+dy},${x+dx}`]);
 		}
-		q.push([y, x, R(d), score + 1000, path]);
-		q.push([y, x, L(d), score + 1000, path]);
+		iter([R(d), L(d)], (di) => {
+			const [tdy, tdx] = D[ sD[di] ];
+			if (dy && (dy === tdy || dy === -tdy)) return;
+			if (dx && (dx === tdx || dx === -tdx)) return;
+			if (inBB(y+tdy, x+tdx, G) && G[y+tdy][x+tdx] === '.') {
+				q.push([y+tdy, x+tdx, di, score + 1001, path + `-${y+tdy},${x+tdx}`]);
+			}
+		})
 	}
 	return [mn, paths];
 }
@@ -79,36 +85,20 @@ function part1(data) {
 	});
 	data[sy][sx] = '.';
 	data[ey][ex] = '.'; 
-	res = dijkstra(data, sy, sx, ey, ex)[0];
+	let paths;
+	[res, paths] = dijkstra(data, sy, sx, ey, ex);
 
 	debug(res);
 	if (res) exec(`echo ${res} | xclip -sel clip -rmlastnl`);
 	console.log("END OF PART1");
+	part2(paths);
 	return;
 }
 
-function part2(data) {
+function part2(paths) {
 
 	let res = 0;
-	data = table(data);
-	let sy, sx, ey, ex;
-	iter(data, (r, i) => {
-		iter(r, (c, j) => {
-			if (c === 'S') {
-				sy = i;
-				sx = j;
-			}
-			if (c === 'E') {
-				ey = i;
-				ex = j;
-			}
-		})
-	});
-	data[sy][sx] = '.';
-	data[ey][ex] = '.'; 
-	const paths = dijkstra(data, sy, sx, ey, ex)[1];
 	const nodes = new set();
-	// debug(paths.size, paths)
 	iter(paths, p => {
 		iter(p.split('-'), n => {
 			nodes.add(n);
@@ -126,7 +116,6 @@ function main() {
 	let data = fs.readFileSync("16_input").toString("utf-8");
 
 	part1(data);
-	part2(data);
 	process.exit(0);
 }
 
