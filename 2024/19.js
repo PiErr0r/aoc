@@ -21,7 +21,7 @@ const canDo = (t, patterns) => {
 	if (t.length === 0) return true;
 	let r = 1;
 	let possible = false;
-	while (r <= t.length) {
+	while (r <= t.length && !possible) {
 		if (patterns.has(t.slice(0, r))) {
 			possible ||= canDo(t.slice(r), patterns);
 		}
