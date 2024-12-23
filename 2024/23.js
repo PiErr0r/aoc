@@ -16,29 +16,45 @@ const { disjoint, isSubset, isSuperset, or, and, xor, sub } = set;
 const { getExecStr } = require("../lib/post");
 const { combinations, combinations_with_replacement, next_permutation, product, unique_permutations } = require("../lib");
 
-const canDo = (t, patterns) => {
-	if (patterns.has(t)) return true
-	if (t.length === 0) return true;
-	let r = 1;
-	let possible = false;
-	while (r <= t.length && !possible) {
-		if (patterns.has(t.slice(0, r))) {
-			possible ||= canDo(t.slice(r), patterns);
+const findCycles = (G, n) => {
+	const res = [];
+
+	iter(keys(G), k => {
+		const q = new Stack();
+		q.push([k, 0, []])
+		const seen = new set();
+		while (!q.empty()) {
+			const [node, len, path] = q.pop();
+			if (len > 3) continue
+			if (node === k && len === n) {
+				res.push([...path]);
+				continue;
+			}
+			iter(G[node], child => {
+				q.push([child, len + 1, path.concat(node)]);
+			})
 		}
-		++r;
-	}
-	return possible;
+	})
+	const R = new set();
+	res.forEach(c => R.add(c.sort()));
+	return [...R];
 }
 
 function part1(data) {
 
 	let res = 0;
-	data = getGroups(data);
-	const patterns = new set(data[0].split(', '))
-	const towels = lines(data[1])
+	data = scanf(data, "%w-%w");
+	const G = {};
+	iter(data, ([a, b]) => {
+		if (a in G) G[a].push(b);
+		else G[a] = [b];
+		if (b in G) G[b].push(a);
+		else G[b] = [a];
+	});
 
-	iter(towels, t => {
-		res += canDo(t, patterns);
+	const C = findCycles(G, 3);
+	iter(C, ([ca, cb, cc]) => {
+		res += (ca[0] === 't' || cb[0] === 't' || cc[0] === 't');
 	})
 
 	debug(res);
@@ -47,50 +63,9 @@ function part1(data) {
 	return;
 }
 
-let MEMO = {};
-const calculateWays = (t, patterns) => {
-	if (t in MEMO) return MEMO[t];
-	if (t.length === 0) return 1;
-	let r = 1;
-	let res = 0//patterns.has(t);
-	while (r <= t.length) {
-		if (patterns.has(t.slice(0, r))) {
-			const tmp = calculateWays(t.slice(r), patterns);
-			MEMO[t.slice(r)] = tmp;
-			res += tmp;
-		}
-		++r;
-	}
-	MEMO[t] = res;
-	return res;
-}
-
-const cw = (t, patterns) => {
-	if (t.length === 0) return 1;
-	let r = 1;
-	let res = 0//patterns.has(t);
-	while (r <= t.length) {
-		if (patterns.has(t.slice(0, r))) {
-			const tmp = cw.p(t.slice(r), patterns);
-			res += tmp;
-		}
-		++r;
-	}
-	return res;
-}
-
 function part2(data) {
 
 	let res = 0;
-	data = getGroups(data);
-	const patterns = new set(data[0].split(', '))
-	const towels = lines(data[1])
-
-	const f = cache(cw, [0]);
-	iter(towels, t => {
-		res += calculateWays(t, patterns);
-		// res += f(t, patterns);
-	})
 
 	debug(res);
 	if (res) exec(`echo ${res} | xclip -sel clip -rmlastnl`);
@@ -99,7 +74,7 @@ function part2(data) {
 }
 
 function main() {
-	let data = fs.readFileSync("19_input").toString("utf-8");
+	let data = fs.readFileSync("23_input").toString("utf-8");
 
 	part1(data);
 	part2(data);

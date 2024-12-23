@@ -16,29 +16,23 @@ const { disjoint, isSubset, isSuperset, or, and, xor, sub } = set;
 const { getExecStr } = require("../lib/post");
 const { combinations, combinations_with_replacement, next_permutation, product, unique_permutations } = require("../lib");
 
-const canDo = (t, patterns) => {
-	if (patterns.has(t)) return true
-	if (t.length === 0) return true;
-	let r = 1;
-	let possible = false;
-	while (r <= t.length && !possible) {
-		if (patterns.has(t.slice(0, r))) {
-			possible ||= canDo(t.slice(r), patterns);
-		}
-		++r;
-	}
-	return possible;
-}
+const prune = n => mod(n, 16777216);
+const mix = (a, b) => a ^ b;
+
+const calc1 = n => prune(mix(n, n * 64));
+const calc2 = n => prune(mix(n, floor(n / 32)));
+const calc3 = n => prune(mix(n, n * 2048));
+const calc = n => calc3(calc2(calc1(n)));
 
 function part1(data) {
 
 	let res = 0;
-	data = getGroups(data);
-	const patterns = new set(data[0].split(', '))
-	const towels = lines(data[1])
-
-	iter(towels, t => {
-		res += canDo(t, patterns);
+	data = ints(data);
+	iter(data, n => {
+		range(2000)(_ => {
+			n = calc(n)
+		})
+		res += n;
 	})
 
 	debug(res);
@@ -47,50 +41,40 @@ function part1(data) {
 	return;
 }
 
-let MEMO = {};
-const calculateWays = (t, patterns) => {
-	if (t in MEMO) return MEMO[t];
-	if (t.length === 0) return 1;
-	let r = 1;
-	let res = 0//patterns.has(t);
-	while (r <= t.length) {
-		if (patterns.has(t.slice(0, r))) {
-			const tmp = calculateWays(t.slice(r), patterns);
-			MEMO[t.slice(r)] = tmp;
-			res += tmp;
-		}
-		++r;
-	}
-	MEMO[t] = res;
-	return res;
-}
-
-const cw = (t, patterns) => {
-	if (t.length === 0) return 1;
-	let r = 1;
-	let res = 0//patterns.has(t);
-	while (r <= t.length) {
-		if (patterns.has(t.slice(0, r))) {
-			const tmp = cw.p(t.slice(r), patterns);
-			res += tmp;
-		}
-		++r;
-	}
-	return res;
-}
-
 function part2(data) {
 
 	let res = 0;
-	data = getGroups(data);
-	const patterns = new set(data[0].split(', '))
-	const towels = lines(data[1])
-
-	const f = cache(cw, [0]);
-	iter(towels, t => {
-		res += calculateWays(t, patterns);
-		// res += f(t, patterns);
+	data = ints(data);
+	const diffs = [];
+	iter(data, (n, i) => {
+		diffs.push([n%10]);
+		range(2000)(_ => {
+			n = calc(n);
+			diffs[i].push(n%10);
+		})
 	})
+
+	const D = new DD();
+	iter(diffs, (diff, di) => {
+		const W = [0];
+		const seen = new set();
+		debug("HERE", di, diffs.length)
+		range(diff.length - 1)(i => {
+			W.push(diff[i + 1] - diff[i]);
+			if (W.length < 5) return;
+			W.shift();
+			if (seen.has(W)) return;
+			seen.add(W);
+			D[W] += diff[i + 1];
+		})
+	})
+	iter(keys(D), k => {
+		if (D[k] > res) {
+			debug(k, res, D[k])
+		}
+		res = max(res, D[k])
+	})
+
 
 	debug(res);
 	if (res) exec(`echo ${res} | xclip -sel clip -rmlastnl`);
@@ -99,7 +83,7 @@ function part2(data) {
 }
 
 function main() {
-	let data = fs.readFileSync("19_input").toString("utf-8");
+	let data = fs.readFileSync("22_input").toString("utf-8");
 
 	part1(data);
 	part2(data);
