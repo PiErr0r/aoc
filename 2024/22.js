@@ -45,36 +45,28 @@ function part2(data) {
 
 	let res = 0;
 	data = ints(data);
-	const diffs = [];
+	const nD = new DD();
 	iter(data, (n, i) => {
-		diffs.push([n%10]);
+		const seen = new set();
+		const W = [0];
+		let prev = n%10;
 		range(2000)(_ => {
 			n = calc(n);
-			diffs[i].push(n%10);
+			W.push(n%10 - prev%10);
+			prev = n;
+			if (W.length === 5) {
+				W.shift();
+				if (!seen.has(W)) {
+					seen.add(W);
+					nD[W] += n % 10;
+				}
+			}
 		})
 	})
 
-	const D = new DD();
-	iter(diffs, (diff, di) => {
-		const W = [0];
-		const seen = new set();
-		debug("HERE", di, diffs.length)
-		range(diff.length - 1)(i => {
-			W.push(diff[i + 1] - diff[i]);
-			if (W.length < 5) return;
-			W.shift();
-			if (seen.has(W)) return;
-			seen.add(W);
-			D[W] += diff[i + 1];
-		})
+	iter(keys(nD), k => {
+		res = max(res, nD[k])
 	})
-	iter(keys(D), k => {
-		if (D[k] > res) {
-			debug(k, res, D[k])
-		}
-		res = max(res, D[k])
-	})
-
 
 	debug(res);
 	if (res) exec(`echo ${res} | xclip -sel clip -rmlastnl`);
