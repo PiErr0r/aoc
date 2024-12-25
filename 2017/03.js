@@ -29,7 +29,7 @@ function part1(data) {
 		tmp -= (sq - 1);
 		++cnt;
 	}
-	debug((sq - 1) / 2, data, tmp)
+
 	res = (sq - 1) / 2 + abs((sq - 1) / 2 - (data - tmp));
 
 	debug(res);
