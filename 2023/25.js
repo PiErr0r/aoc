@@ -16,6 +16,17 @@ const { isSuperset, or, and, xor, sub } = set;
 const { getExecStr } = require("../lib/post");
 const { combinations, combinations_with_replacement, next_permutation, product } = require("../lib");
 
+/*
+ * Graph algos to check out:
+ * - karger
+ * - kosaraju
+ * - kruskal
+ * - how to find cliques
+ * - Dinic's
+ * - Stoer–Wagner
+ * - max-flow min-cut
+ */
+
 const kosaraju = (G) => {
 	const L = [];
 	const visited = new set();
@@ -98,6 +109,8 @@ const findCliques = (G, K, i, l, s) => {
     }
 }
 
+// https://en.wikipedia.org/wiki/Karger%27s_algorithm
+
 const karger = G => {
 	// debug(G)
 	while (keys(G).length > 2) {
@@ -155,8 +168,8 @@ function part1(data) {
 	})
 	// debug(kosaraju(G))
 	// findCliques(G, keys(G), 0, 0, 5)
-    debug(karger(G));
-    debug(keys(G).map(k => k.split('-').length))
+    // debug(karger(G));
+    // debug(keys(G).map(k => k.split('-').length))
 
 	debug(res);
 	if (res) exec(`echo ${res} | xclip -sel clip -rmlastnl`);
