@@ -26,33 +26,6 @@ const ID = {
 	'*': 1,
 }
 
-const columnsxx = data => {
-	const nData = [];
-	iter(data, row => {
-		const nRow = [];
-		let curr = 0;
-		let isPushed = true;
-		iter(row, (c, ci) => {
-			// debug(c,c < '0' || c > '9' || c !== '+' || c !== '*', c < '0' , c > '9' , c !== '+' , c !== '*')
-			if ((c < '0' || c > '9') && c !== '+' && c !== '*') {
-				if (isPushed) return;
-				nRow.push(curr);
-				curr = 0;
-				isPushed = true;
-				return;
-			}
-			isPushed = false;
-			curr = 10 * curr + int(c);
-			debug('!',curr)
-			if (ci === c.length - 1) {
-				nRow.push(curr);
-			}
-		})
-		nData.push(nRow);
-	})
-	return nData
-}
-
 const columns = data => {
 	const ops = data.splice(data.length - 1, 1)[0].split(' ').filter(c => c.length);
 	const nData = data.map(r => r.split(' ').filter(c => c.length).map(c => int(c)));
