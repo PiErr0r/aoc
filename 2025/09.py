@@ -1,4 +1,5 @@
 from shapely.geometry import Polygon, box
+import matplotlib.pyplot as plt
 
 def is_inside():
 	rect = box(x_min, y_min, x_max, y_max)  # Create rectangle
@@ -46,3 +47,9 @@ if __name__ == '__main__':
 				res = area
 
 	print(res)
+	x, y = zip(*data)
+
+	plt.figure(figsize=(8, 8))
+	plt.axis('equal')
+	plt.fill(x, y)
+	plt.show()
